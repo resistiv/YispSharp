@@ -1,0 +1,19 @@
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace YispTester
+{
+    [TestClass]
+    public class Tests
+    {
+        [TestMethod]
+        public void Test()
+        {
+            string code = "";
+            string expected = "";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
+    }
+}
