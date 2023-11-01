@@ -1,13 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace YispSharp.Data
 {
     public abstract class SExpr
     {
+        public abstract T Accept<T>(IVisitor<T> visitor);
+
+        public interface IVisitor<T>
+        {
+            public T VisitAtomSExpr(Atom expr);
+            public T VisitBinarySExpr(Binary expr);
+            public T VisitUnarySExpr(Unary expr);
+        }
+
         /// <summary>
         /// Represents a single unit of data.
         /// </summary>
@@ -18,6 +24,11 @@ namespace YispSharp.Data
             public Atom(object value)
             {
                 Value = value;
+            }
+
+            public override T Accept<T>(IVisitor<T> visitor)
+            {
+                return visitor.VisitAtomSExpr(this);
             }
         }
 
@@ -35,6 +46,31 @@ namespace YispSharp.Data
                 Operator = @operator;
                 Left = left;
                 Right = right;
+            }
+
+            public override T Accept<T>(IVisitor<T> visitor)
+            {
+                return visitor.VisitBinarySExpr(this);
+            }
+        }
+
+        /// <summary>
+        /// Represents an expression with one argument.
+        /// </summary>
+        public class Unary : SExpr
+        {
+            public readonly Token Operator;
+            public readonly SExpr Right;
+
+            public Unary(Token @operator, SExpr right)
+            {
+                Operator = @operator;
+                Right = right;
+            }
+
+            public override T Accept<T>(IVisitor<T> visitor)
+            {
+                return visitor.VisitUnarySExpr(this);
             }
         }
     }
