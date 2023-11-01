@@ -79,6 +79,23 @@ namespace YispSharp
         }
 
         /// <summary>
+        /// Prints an error.
+        /// </summary>
+        /// <param name="token">The <see cref="Token"/> that caused the error.</param>
+        /// <param name="message">A message addressing the error.</param>
+        public static void Error(Token token, string message)
+        {
+            if (token.Type == TokenType.Eof)
+            {
+                Report(token.Line, " at end", message);
+            }
+            else
+            {
+                Report(token.Line, $" at '{token.Lexeme}'", message);
+            }
+        }
+
+        /// <summary>
         /// Reports a message.
         /// </summary>
         /// <param name="line">The line number of where the message originates.</param>
