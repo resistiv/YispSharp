@@ -39,6 +39,7 @@
         String,
         Number,
         Nil,
+        True, // This is here temporarily, until quote is properly implemented for 't
 
         Eof,
     }

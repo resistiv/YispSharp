@@ -29,6 +29,8 @@ namespace YispSharp.Utils
             { "list?", TokenType.ListP },
             { "nil?", TokenType.NilP },
             { "eq?", TokenType.EqP },
+            // FIXME: Remove once quote is implemented
+            { "'t", TokenType.True },
         };
 
         /// <summary>

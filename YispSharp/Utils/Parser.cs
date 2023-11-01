@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using YispSharp.Data;
+﻿using YispSharp.Data;
 using YispSharp.Exceptions;
 
 namespace YispSharp.Utils
@@ -9,6 +8,8 @@ namespace YispSharp.Utils
         private readonly List<Token> _tokens;
         private int _current = 0;
 
+        private readonly TokenType[] _operatorTypes = { TokenType.Plus, TokenType.Minus, TokenType.Star, TokenType.Slash, TokenType.Equal, TokenType.LessThan, TokenType.GreaterThan };
+
         public Parser(List<Token> tokens)
         {
             _tokens = tokens;
@@ -16,7 +17,67 @@ namespace YispSharp.Utils
 
         private SExpr SExpression()
         {
+            if (MatchToken(TokenType.LeftParentheses))
+            {
+                return List();
+            }
+            else
+            {
+                return Atom();
+            }
+        }
 
+        private SExpr Atom()
+        {
+            if (MatchToken(TokenType.Number, TokenType.String, TokenType.Symbol))
+            {
+                return new SExpr.Atom(PreviousToken().Literal);
+            }
+
+            Error(Peek(), "Expected atom.");
+            return null;
+        }
+
+        private SExpr List()
+        {
+            // Operations
+            if (MatchToken(_operatorTypes))
+            {
+                return Operation();
+            }
+            // Raw list
+            else
+            {
+                return PlainList();
+            }
+        }
+
+        private SExpr PlainList()
+        {
+            // Read all values of list
+            List<SExpr> values = new();
+            while (!MatchToken(TokenType.RightParentheses))
+            {
+                values.Add(SExpression());
+            }
+
+            // No content, nil!
+            if (values.Count == 0)
+            {
+                return new SExpr.Atom(null);
+            }
+            else
+            {
+                return new SExpr.List(values);
+            }
+        }
+
+        private SExpr Operation()
+        {
+            Token @operator = PreviousToken();
+            SExpr left = SExpression();
+            SExpr right = SExpression();
+            return new SExpr.Binary(@operator, left, right);
         }
 
         /// <summary>

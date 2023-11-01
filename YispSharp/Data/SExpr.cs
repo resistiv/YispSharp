@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-namespace YispSharp.Data
+﻿namespace YispSharp.Data
 {
     public abstract class SExpr
     {
@@ -10,6 +7,7 @@ namespace YispSharp.Data
         public interface IVisitor<T>
         {
             public T VisitAtomSExpr(Atom expr);
+            public T VisitListSExpr(List expr);
             public T VisitBinarySExpr(Binary expr);
             public T VisitUnarySExpr(Unary expr);
         }
@@ -29,6 +27,24 @@ namespace YispSharp.Data
             public override T Accept<T>(IVisitor<T> visitor)
             {
                 return visitor.VisitAtomSExpr(this);
+            }
+        }
+
+        /// <summary>
+        /// Represents a variable list of data.
+        /// </summary>
+        public class List : SExpr
+        {
+            public readonly List<SExpr> Values;
+
+            public List(List<SExpr> values)
+            {
+                Values = values;
+            }
+
+            public override T Accept<T>(IVisitor<T> visitor)
+            {
+                return visitor.VisitListSExpr(this);
             }
         }
 
