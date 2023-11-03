@@ -10,6 +10,7 @@
             public T VisitListSExpr(List expr);
             public T VisitBinarySExpr(Binary expr);
             public T VisitUnarySExpr(Unary expr);
+            public T VisitDefineSExpr(Define expr);
         }
 
         /// <summary>
@@ -87,6 +88,28 @@
             public override T Accept<T>(IVisitor<T> visitor)
             {
                 return visitor.VisitUnarySExpr(this);
+            }
+        }
+
+        /// <summary>
+        /// Represents a define statement.
+        /// </summary>
+        public class Define : SExpr
+        {
+            public readonly Token Name;
+            public readonly List<Token> Arguments;
+            public readonly SExpr Body;
+
+            public Define(Token name, List<Token> arguments, SExpr body)
+            {
+                Name = name;
+                Arguments = arguments;
+                Body = body;
+            }
+
+            public override T Accept<T>(IVisitor<T> visitor)
+            {
+                return visitor.VisitDefineSExpr(this);
             }
         }
     }

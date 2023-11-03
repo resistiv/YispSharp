@@ -8,7 +8,8 @@ namespace YispSharp.Utils
         private readonly List<Token> _tokens;
         private int _current = 0;
 
-        private readonly TokenType[] _operatorTypes = { TokenType.Plus, TokenType.Minus, TokenType.Star, TokenType.Slash, TokenType.Equal, TokenType.LessThan, TokenType.GreaterThan };
+        private readonly TokenType[] _binaryTypes = { TokenType.Plus, TokenType.Minus, TokenType.Star, TokenType.Slash, TokenType.Equal, TokenType.LessThan, TokenType.GreaterThan };
+        private readonly TokenType[] _unaryTypes = { TokenType.Car, TokenType.Cdr, TokenType.NumberP, TokenType.SymbolP, TokenType.NotP, TokenType.ListP, TokenType.NilP };
 
         public Parser(List<Token> tokens)
         {
@@ -40,10 +41,19 @@ namespace YispSharp.Utils
 
         private SExpr List()
         {
-            // Operations
-            if (MatchToken(_operatorTypes))
+            // Binary operations
+            if (MatchToken(_binaryTypes))
             {
-                return Operation();
+                return Binary();
+            }
+            // Unary operations
+            else if (MatchToken(_unaryTypes))
+            {
+                return Unary();
+            }
+            else if (MatchToken(TokenType.Define))
+            {
+                return Define();
             }
             // Raw list
             else
@@ -72,12 +82,36 @@ namespace YispSharp.Utils
             }
         }
 
-        private SExpr Operation()
+        private SExpr Binary()
         {
             Token @operator = PreviousToken();
             SExpr left = SExpression();
             SExpr right = SExpression();
             return new SExpr.Binary(@operator, left, right);
+        }
+
+        private SExpr Unary()
+        {
+            Token @operator = PreviousToken();
+            SExpr right = SExpression();
+            return new SExpr.Unary(@operator, right);
+        }
+
+        private SExpr Define()
+        {
+            Token name = ConsumeToken(TokenType.Symbol, "Expected name in function definition.");
+
+            // Read argument names
+            List<Token> args = new();
+            ConsumeToken(TokenType.LeftParentheses, "Expected argument list in function definition.");
+            while (!MatchToken(TokenType.RightParentheses))
+            {
+                args.Add(ConsumeToken(TokenType.Symbol, "Expected symbol in function definition argument list."));
+            }
+
+            SExpr body = SExpression();
+
+            return new SExpr.Define(name, args, body);
         }
 
         /// <summary>
