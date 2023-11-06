@@ -16,6 +16,25 @@ namespace YispSharp.Utils
             _tokens = tokens;
         }
 
+        public List<SExpr> Parse()
+        {
+            List<SExpr> sexprs = new();
+            
+            while (!AtEnd())
+            {
+                try
+                {
+                    sexprs.Add(SExpression());
+                }
+                catch (ParsingException)
+                {
+                    SyncState();
+                }
+            }
+
+            return sexprs;
+        }
+
         private SExpr SExpression()
         {
             if (MatchToken(TokenType.LeftParentheses))
@@ -34,9 +53,12 @@ namespace YispSharp.Utils
             {
                 return new SExpr.Atom(PreviousToken().Literal);
             }
+            else if (MatchToken(TokenType.True))
+            {
+                return new SExpr.Atom(true);
+            }
 
-            Error(Peek(), "Expected atom.");
-            return null;
+            throw Error(Peek(), "Expected atom.");
         }
 
         private SExpr List()
@@ -51,9 +73,20 @@ namespace YispSharp.Utils
             {
                 return Unary();
             }
+            // Define statement
             else if (MatchToken(TokenType.Define))
             {
                 return Define();
+            }
+            // Set statement
+            else if (MatchToken(TokenType.Set))
+            {
+                return Set();
+            }
+            // Cond control flow statement
+            else if (MatchToken(TokenType.Cond))
+            {
+                return Cond();
             }
             // Raw list
             else
@@ -102,16 +135,31 @@ namespace YispSharp.Utils
             Token name = ConsumeToken(TokenType.Symbol, "Expected name in function definition.");
 
             // Read argument names
-            List<Token> args = new();
-            ConsumeToken(TokenType.LeftParentheses, "Expected argument list in function definition.");
-            while (!MatchToken(TokenType.RightParentheses))
-            {
-                args.Add(ConsumeToken(TokenType.Symbol, "Expected symbol in function definition argument list."));
-            }
+            ConsumeToken(TokenType.LeftParentheses, "Expected list of arguments in function definition.");
+            SExpr args = List();
 
             SExpr body = SExpression();
 
             return new SExpr.Define(name, args, body);
+        }
+
+        private SExpr Set()
+        {
+            Token name = ConsumeToken(TokenType.Symbol, "Expected name in variable definition.");
+            SExpr value = SExpression();
+            return new SExpr.Set(name, value);
+        }
+
+        private SExpr Cond()
+        {
+            // Read conditions and results
+            List<SExpr> condPairs = new();
+            while (MatchToken(TokenType.LeftParentheses))
+            {
+                condPairs.Add(List());
+            }
+
+            return new SExpr.Cond(condPairs);
         }
 
         /// <summary>
@@ -214,6 +262,25 @@ namespace YispSharp.Utils
         {
             Yisp.Error(token, message);
             return new ParsingException();
+        }
+
+        private void SyncState()
+        {
+            NextToken();
+
+            while (!AtEnd())
+            {
+                if (PreviousToken().Type == TokenType.RightParentheses)
+                {
+                    return;
+                }
+
+                switch (Peek().Type)
+                {
+                    case TokenType.LeftParentheses:
+                        return;
+                }
+            }
         }
     }
 }

@@ -61,11 +61,17 @@ namespace YispSharp
             Scanner scanner = new(source);
             List<Token> tokens = scanner.ScanTokens();
 
-            // For now, just print tokens
+            /*// For now, just print tokens
             foreach (Token token in tokens)
             {
                 Console.WriteLine(token.ToString());
-            }
+            }*/
+
+            Parser parser = new(tokens);
+            List<SExpr> sexprs = parser.Parse();
+
+            // Print out using AstPrinter
+
         }
 
         /// <summary>

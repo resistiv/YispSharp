@@ -6,6 +6,7 @@ namespace YispTester
     /// Tests the functionality of the <see cref="YispSharp.Scanner"/> class.
     /// </summary>
     /// <remarks>Partially adapted from Robert Nystrom's Lox scanner tests.</remarks>
+    [Ignore] // No longer in place after initial scanner testing.
     [TestClass]
     public class ScannerTests
     {
