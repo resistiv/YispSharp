@@ -120,6 +120,7 @@ namespace YispSharp.Utils
             Token @operator = PreviousToken();
             SExpr left = SExpression();
             SExpr right = SExpression();
+            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in binary expression.");
             return new SExpr.Binary(@operator, left, right);
         }
 
@@ -127,6 +128,7 @@ namespace YispSharp.Utils
         {
             Token @operator = PreviousToken();
             SExpr right = SExpression();
+            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in unary expression.");
             return new SExpr.Unary(@operator, right);
         }
 
@@ -140,6 +142,8 @@ namespace YispSharp.Utils
 
             SExpr body = SExpression();
 
+            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in function definition.");
+
             return new SExpr.Define(name, args, body);
         }
 
@@ -147,6 +151,7 @@ namespace YispSharp.Utils
         {
             Token name = ConsumeToken(TokenType.Symbol, "Expected name in variable definition.");
             SExpr value = SExpression();
+            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in variable definition.");
             return new SExpr.Set(name, value);
         }
 
@@ -158,6 +163,7 @@ namespace YispSharp.Utils
             {
                 condPairs.Add(List());
             }
+            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in cond control flow.");
 
             return new SExpr.Cond(condPairs);
         }

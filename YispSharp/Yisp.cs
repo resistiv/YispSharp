@@ -71,7 +71,8 @@ namespace YispSharp
             List<SExpr> sexprs = parser.Parse();
 
             // Print out using AstPrinter
-
+            AstPrinter printer = new();
+            printer.Print(sexprs);
         }
 
         /// <summary>

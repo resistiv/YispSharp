@@ -323,7 +323,7 @@ namespace YispSharp.Utils
                 type = TokenType.Symbol;
             }
 
-            AddToken(type);
+            AddToken(type, text);
         }
     }
 }

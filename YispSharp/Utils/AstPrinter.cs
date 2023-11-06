@@ -5,9 +5,12 @@ namespace YispSharp.Utils
 {
     public class AstPrinter : SExpr.IVisitor<string>
     {
-        public string Print(SExpr expr)
+        public void Print(List<SExpr> exprs)
         {
-            return expr.Accept(this);
+            foreach (SExpr expr in exprs)
+            {
+                Console.WriteLine(expr.Accept(this));
+            }
         }
 
         public string Parenthesize(string name, params SExpr[] sexprs)
@@ -48,22 +51,22 @@ namespace YispSharp.Utils
 
         public string VisitDefineSExpr(SExpr.Define expr)
         {
-            throw new NotImplementedException();
+            return Parenthesize("define", new SExpr.Atom(expr.Name.Lexeme), expr.Arguments, expr.Body);
         }
 
         public string VisitListSExpr(SExpr.List expr)
         {
-            throw new NotImplementedException();
+            return Parenthesize("list", expr.Values.ToArray());
         }
 
         public string VisitSetSExpr(SExpr.Set expr)
         {
-            throw new NotImplementedException();
+            return Parenthesize("set", new SExpr.Atom(expr.Name.Lexeme), expr.Value);
         }
 
         public string VisitUnarySExpr(SExpr.Unary expr)
         {
-            throw new NotImplementedException();
+            return Parenthesize(expr.Operator.Lexeme, expr.Right);
         }
     }
 }
