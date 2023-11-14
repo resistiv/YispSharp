@@ -8,7 +8,7 @@ namespace YispSharp.Utils
         private readonly List<Token> _tokens;
         private int _current = 0;
 
-        private readonly TokenType[] _binaryTypes = { TokenType.Plus, TokenType.Minus, TokenType.Star, TokenType.Slash, TokenType.Equal, TokenType.LessThan, TokenType.GreaterThan };
+        private readonly TokenType[] _binaryTypes = { TokenType.Plus, TokenType.Minus, TokenType.Star, TokenType.Slash, TokenType.Equal, TokenType.LessThan, TokenType.GreaterThan, TokenType.Cons };
         private readonly TokenType[] _unaryTypes = { TokenType.Car, TokenType.Cdr, TokenType.NumberP, TokenType.SymbolP, TokenType.NotP, TokenType.ListP, TokenType.NilP };
 
         public Parser(List<Token> tokens)

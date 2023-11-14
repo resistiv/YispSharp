@@ -50,5 +50,20 @@ namespace YispTester
 
             Assert.AreEqual(expected, output);
         }
+
+        [TestMethod]
+        public void ConsTest()
+        {
+            string code = "(cons 1 ())\n" +
+                          "(cons 1 (cons 2 (cons 3 ())))\n" +
+                          "(cons (+ 3 4) (cons (/ 10 5) (cons (* 7 2) (cons (- 2 1) ()))))";
+            string expected = "(cons 1 nil)\n" +
+                              "(cons 1 (cons 2 (cons 3 nil)))\n" +
+                              "(cons (+ 3 4) (cons (/ 10 5) (cons (* 7 2) (cons (- 2 1) nil))))";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
     }
 }
