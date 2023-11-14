@@ -65,5 +65,18 @@ namespace YispTester
 
             Assert.AreEqual(expected, output);
         }
+
+        [TestMethod]
+        public void CondTest()
+        {
+            string code = "(cond ((= 1 2) ()))\n" +
+                          "(cond ((= a 1) 2) ((> a 1) (/ a 2)) ((< a 1) ()))";
+            string expected = "(cond (list (= 1 2) nil))\n" +
+                              "(cond (list (= a 1) 2) (list (> a 1) (/ a 2)) (list (< a 1) nil))";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
     }
 }
