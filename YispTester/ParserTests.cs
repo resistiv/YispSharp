@@ -78,5 +78,46 @@ namespace YispTester
 
             Assert.AreEqual(expected, output);
         }
+
+        [TestMethod]
+        public void CarTest()
+        {
+            string code = "(car (1 2 3 4 5))\n" +
+                          "(car (cons 3 (cons 2 (cons 1 ()))))";
+            string expected = "(car (list 1 2 3 4 5))\n" +
+                              "(car (cons 3 (cons 2 (cons 1 nil))))";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void CdrTest()
+        {
+            string code = "(cdr (cdr (1 2 3 4 5)))\n" +
+                          "(cdr (cons 3 (cons 2 (cons 1 ()))))";
+            string expected = "(cdr (cdr (list 1 2 3 4 5)))\n" +
+                              "(cdr (cons 3 (cons 2 (cons 1 nil))))";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void AndPTest()
+        {
+            string code = "(and? (+ 1 2) ())\n" +
+                          "(and? () (+ 1 2))\n" +
+                          "(and? (+ 1 (/ 10 5)) (* 2 (- 8 7)))";
+            string expected = "(and? (+ 1 2) nil)\n" +
+                              "(and? nil (+ 1 2))\n" +
+                              "(and? (+ 1 (/ 10 5)) (* 2 (- 8 7)))";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
     }
 }

@@ -8,8 +8,10 @@ namespace YispTester
         [TestMethod]
         public void Test()
         {
-            string code = "";
-            string expected = "";
+            string code = "\n" +
+                          "";
+            string expected = "\n" +
+                              "";
 
             string output = Tools.RunCode(code);
 
