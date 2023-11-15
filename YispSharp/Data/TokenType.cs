@@ -5,7 +5,7 @@
         // Delimiters
         LeftParentheses,
         RightParentheses,
-        //SingleQuote,
+        SingleQuote,
         //DoubleQuote,
         //Semicolon,
 

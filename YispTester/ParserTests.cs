@@ -141,7 +141,7 @@ namespace YispTester
             string code = "(not? ())\n" +
                           "(not? 1)\n" +
                           "(not? (1 2 3))\n" +
-                          "(not? 't)";
+                          "(not? t)";
             string expected = "(not? nil)\n" +
                               "(not? 1)\n" +
                               "(not? (list 1 2 3))\n" +

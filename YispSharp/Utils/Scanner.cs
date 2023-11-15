@@ -30,7 +30,7 @@ namespace YispSharp.Utils
             { "nil?", TokenType.NilP },
             { "eq?", TokenType.EqP },
             // FIXME: Remove once quote is implemented
-            { "'t", TokenType.True },
+            { "t", TokenType.True },
         };
 
         /// <summary>
@@ -90,10 +90,9 @@ namespace YispSharp.Utils
                 case '>':
                     AddToken(TokenType.GreaterThan);
                     break;
-                // FIXME: Add back & fix once quote is implemented
-                /*case '\'':
+                case '\'':
                     AddToken(TokenType.SingleQuote);
-                    break;*/
+                    break;
                 case ';':
                     while (Peek() != '\n' && !AtEnd())
                     {
@@ -187,8 +186,7 @@ namespace YispSharp.Utils
         /// <returns>Whether or not the character is an ASCII alphabetical character.</returns>
         private static bool IsAlpha(char c)
         {
-            // FIXME: Remove single quote once quote is implemented
-            return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '-' || c == '?' || c == '\'';
+            return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '-' || c == '?';
         }
 
         /// <summary>
