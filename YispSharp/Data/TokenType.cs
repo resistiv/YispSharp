@@ -5,7 +5,7 @@
         // Delimiters
         LeftParentheses,
         RightParentheses,
-        SingleQuote,
+        //SingleQuote,
         //DoubleQuote,
         //Semicolon,
 
@@ -39,7 +39,7 @@
         String,
         Number,
         Nil,
-        True, // This is here temporarily, until quote is properly implemented for 't
+        True, // FIXME: This is here temporarily, until quote is properly implemented for 't
 
         Eof,
     }

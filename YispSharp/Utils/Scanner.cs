@@ -90,9 +90,10 @@ namespace YispSharp.Utils
                 case '>':
                     AddToken(TokenType.GreaterThan);
                     break;
-                case '\'':
+                // FIXME: Add back & fix once quote is implemented
+                /*case '\'':
                     AddToken(TokenType.SingleQuote);
-                    break;
+                    break;*/
                 case ';':
                     while (Peek() != '\n' && !AtEnd())
                     {
@@ -186,7 +187,8 @@ namespace YispSharp.Utils
         /// <returns>Whether or not the character is an ASCII alphabetical character.</returns>
         private static bool IsAlpha(char c)
         {
-            return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '-' || c == '?';
+            // FIXME: Remove single quote once quote is implemented
+            return c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z' || c == '-' || c == '?' || c == '\'';
         }
 
         /// <summary>
@@ -197,26 +199,6 @@ namespace YispSharp.Utils
         private static bool IsAlphaNumeric(char c)
         {
             return IsAlpha(c) || IsDigit(c);
-        }
-
-        /// <summary>
-        /// Looks ahead in the source <see cref="string"/> and sees if the next <see cref="char"/> matches what is expected.
-        /// </summary>
-        /// <param name="expected">An expected next <see cref="char"/>.</param>
-        /// <returns>Whether or not the next <see cref="char"/> in the source <see cref="string"/> matches the expected <see cref="char"/>.</returns>
-        private bool Match(char expected)
-        {
-            if (AtEnd())
-            {
-                return false;
-            }
-            if (_source[_currentIndex] != expected)
-            {
-                return false;
-            }
-
-            _currentIndex++;
-            return true;
         }
 
         /// <summary>
