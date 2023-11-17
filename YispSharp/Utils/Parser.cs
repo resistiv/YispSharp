@@ -103,16 +103,8 @@ namespace YispSharp.Utils
             {
                 values.Add(SExpression());
             }
-
-            // No content, nil!
-            if (values.Count == 0)
-            {
-                return new SExpr.Atom(null);
-            }
-            else
-            {
-                return new SExpr.List(values);
-            }
+            
+            return new SExpr.List(values);
         }
 
         private SExpr Binary()

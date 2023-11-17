@@ -29,7 +29,7 @@ namespace YispTester
                           "(define no-args () (+ x y))";
             string expected = "(define add-two (list a b) (+ a b))\n" +
                               "(define example-function (list a b c) (+ a (- b c)))\n" +
-                              "(define no-args nil (+ x y))";
+                              "(define no-args (list) (+ x y))";
 
             string output = Tools.RunCode(code);
 
@@ -44,7 +44,7 @@ namespace YispTester
                           "(set nil-var ())";
             string expected = "(set example-var 123)\n" +
                               "(set example-var (+ 1 (- 2 (/ 3 (* 4 5)))))\n" +
-                              "(set nil-var nil)";
+                              "(set nil-var (list))";
 
             string output = Tools.RunCode(code);
 
@@ -57,9 +57,9 @@ namespace YispTester
             string code = "(cons 1 ())\n" +
                           "(cons 1 (cons 2 (cons 3 ())))\n" +
                           "(cons (+ 3 4) (cons (/ 10 5) (cons (* 7 2) (cons (- 2 1) ()))))";
-            string expected = "(cons 1 nil)\n" +
-                              "(cons 1 (cons 2 (cons 3 nil)))\n" +
-                              "(cons (+ 3 4) (cons (/ 10 5) (cons (* 7 2) (cons (- 2 1) nil))))";
+            string expected = "(cons 1 (list))\n" +
+                              "(cons 1 (cons 2 (cons 3 (list))))\n" +
+                              "(cons (+ 3 4) (cons (/ 10 5) (cons (* 7 2) (cons (- 2 1) (list)))))";
 
             string output = Tools.RunCode(code);
 
@@ -71,8 +71,8 @@ namespace YispTester
         {
             string code = "(cond ((= 1 2) ()))\n" +
                           "(cond ((= a 1) 2) ((> a 1) (/ a 2)) ((< a 1) ()))";
-            string expected = "(cond (list (= 1 2) nil))\n" +
-                              "(cond (list (= a 1) 2) (list (> a 1) (/ a 2)) (list (< a 1) nil))";
+            string expected = "(cond (list (= 1 2) (list)))\n" +
+                              "(cond (list (= a 1) 2) (list (> a 1) (/ a 2)) (list (< a 1) (list)))";
 
             string output = Tools.RunCode(code);
 
@@ -85,7 +85,7 @@ namespace YispTester
             string code = "(car (1 2 3 4 5))\n" +
                           "(car (cons 3 (cons 2 (cons 1 ()))))";
             string expected = "(car (list 1 2 3 4 5))\n" +
-                              "(car (cons 3 (cons 2 (cons 1 nil))))";
+                              "(car (cons 3 (cons 2 (cons 1 (list)))))";
 
             string output = Tools.RunCode(code);
 
@@ -98,7 +98,7 @@ namespace YispTester
             string code = "(cdr (cdr (1 2 3 4 5)))\n" +
                           "(cdr (cons 3 (cons 2 (cons 1 ()))))";
             string expected = "(cdr (cdr (list 1 2 3 4 5)))\n" +
-                              "(cdr (cons 3 (cons 2 (cons 1 nil))))";
+                              "(cdr (cons 3 (cons 2 (cons 1 (list)))))";
 
             string output = Tools.RunCode(code);
 
@@ -111,8 +111,8 @@ namespace YispTester
             string code = "(and? (+ 1 2) ())\n" +
                           "(and? () (+ 1 2))\n" +
                           "(and? (+ 1 (/ 10 5)) (* 2 (- 8 7)))";
-            string expected = "(and? (+ 1 2) nil)\n" +
-                              "(and? nil (+ 1 2))\n" +
+            string expected = "(and? (+ 1 2) (list))\n" +
+                              "(and? (list) (+ 1 2))\n" +
                               "(and? (+ 1 (/ 10 5)) (* 2 (- 8 7)))";
 
             string output = Tools.RunCode(code);
@@ -126,8 +126,8 @@ namespace YispTester
             string code = "(or? (+ 1 2) ())\n" +
                           "(or? () (+ 1 2))\n" +
                           "(or? (+ 1 (/ 10 5)) (* 2 (- 8 7)))";
-            string expected = "(or? (+ 1 2) nil)\n" +
-                              "(or? nil (+ 1 2))\n" +
+            string expected = "(or? (+ 1 2) (list))\n" +
+                              "(or? (list) (+ 1 2))\n" +
                               "(or? (+ 1 (/ 10 5)) (* 2 (- 8 7)))";
 
             string output = Tools.RunCode(code);
@@ -142,7 +142,7 @@ namespace YispTester
                           "(not? 1)\n" +
                           "(not? (1 2 3))\n" +
                           "(not? t)";
-            string expected = "(not? nil)\n" +
+            string expected = "(not? (list))\n" +
                               "(not? 1)\n" +
                               "(not? (list 1 2 3))\n" +
                               "(not? True)";
@@ -162,7 +162,7 @@ namespace YispTester
                           "(number? (+ 37 (- 7 5)))";
             string expected = "(number? 1)\n" +
                               "(number? (list 1))\n" +
-                              "(number? nil)\n" +
+                              "(number? (list))\n" +
                               "(number? test)\n" +
                               "(number? (+ 37 (- 7 5)))";
 
@@ -181,7 +181,7 @@ namespace YispTester
                           "(symbol? (+ 37 (- 7 5)))";
             string expected = "(symbol? 1)\n" +
                               "(symbol? (list 1))\n" +
-                              "(symbol? nil)\n" +
+                              "(symbol? (list))\n" +
                               "(symbol? test)\n" +
                               "(symbol? (+ 37 (- 7 5)))";
 
@@ -200,7 +200,7 @@ namespace YispTester
                           "(list? (+ 37 (- 7 5)))";
             string expected = "(list? 1)\n" +
                               "(list? (list 1))\n" +
-                              "(list? nil)\n" +
+                              "(list? (list))\n" +
                               "(list? test)\n" +
                               "(list? (+ 37 (- 7 5)))";
 
@@ -219,7 +219,7 @@ namespace YispTester
                           "(nil? (+ 37 (- 7 5)))";
             string expected = "(nil? 1)\n" +
                               "(nil? (list 1))\n" +
-                              "(nil? nil)\n" +
+                              "(nil? (list))\n" +
                               "(nil? test)\n" +
                               "(nil? (+ 37 (- 7 5)))";
 
