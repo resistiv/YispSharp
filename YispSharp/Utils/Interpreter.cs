@@ -84,22 +84,23 @@ namespace YispSharp.Utils
             else if (obj is List<object> l)
             {
                 string output = "(";
+                bool lastIsNil = (l.Last() == null);
+
                 for (int i = 0; i < l.Count; i++)
                 {
-                    bool isLast;
-                    if (isLast = (i == l.Count - 1))
+                    bool isLast = (i == l.Count - 1);
+                    if (isLast)
                     {
-                        if (l[i] == null)
-                        {
-                            continue;
-                        }
-                        else
-                        {
-                            output += ". ";
-                        }
+                        output += ". ";
                     }
-                    output += l[i].ToString();
-                    if (!isLast)
+
+                    output += l[i] == null ? "()" : l[i].ToString();
+
+                    if (lastIsNil && i == l.Count - 2)
+                    {
+                        break;
+                    }
+                    else if (!isLast)
                     {
                         output += " ";
                     }
@@ -172,7 +173,7 @@ namespace YispSharp.Utils
                     }
                     else
                     {
-                        return (right as List<object>).Prepend(left);
+                        return (right as List<object>).Prepend(left).ToList();
                     }
                 case TokenType.AndP:
                     return IsTruthy(left) && IsTruthy(right);
