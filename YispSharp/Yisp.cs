@@ -1,4 +1,5 @@
 ﻿using YispSharp.Data;
+using YispSharp.Exceptions;
 using YispSharp.Utils;
 
 namespace YispSharp
@@ -8,7 +9,9 @@ namespace YispSharp
     /// </summary>
     public static class Yisp
     {
+        private static Interpreter interpreter = new();
         private static bool _hadError = false;
+        private static bool _hadRuntimeError = false;
 
         /// <summary>
         /// Runs a Yisp file.
@@ -31,6 +34,10 @@ namespace YispSharp
             if (_hadError)
             {
                 Environment.Exit(65);
+            }
+            if (_hadRuntimeError)
+            {
+                Environment.Exit(70);
             }
         }
 
@@ -61,18 +68,15 @@ namespace YispSharp
             Scanner scanner = new(source);
             List<Token> tokens = scanner.ScanTokens();
 
-            /*// For now, just print tokens
-            foreach (Token token in tokens)
-            {
-                Console.WriteLine(token.ToString());
-            }*/
-
             Parser parser = new(tokens);
             List<SExpr> sexprs = parser.Parse();
 
-            // Print out using AstPrinter
-            AstPrinter printer = new();
-            printer.Print(sexprs);
+            if (_hadError)
+            {
+                return;
+            }
+
+            interpreter.Interpret(sexprs);
         }
 
         /// <summary>
@@ -103,6 +107,16 @@ namespace YispSharp
         }
 
         /// <summary>
+        /// Prints a runtime error.
+        /// </summary>
+        /// <param name="error">The <see cref="RuntimeException"/> representing the error.</param>
+        public static void RuntimeError(RuntimeException error)
+        {
+            Console.WriteLine($"{error.Message}{Environment.NewLine}[line {error.Token.Line}]");
+            _hadRuntimeError = true;
+        }
+
+        /// <summary>
         /// Reports a message.
         /// </summary>
         /// <param name="line">The line number of where the message originates.</param>
@@ -119,7 +133,9 @@ namespace YispSharp
         /// </summary>
         public static void DebugReset()
         {
+            interpreter = new();
             _hadError = false;
+            _hadRuntimeError = false;
         }
     }
 }

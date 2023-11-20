@@ -103,6 +103,12 @@ namespace YispSharp.Utils
             {
                 values.Add(SExpression());
             }
+
+            // Add nil terminator
+            if (values.Count != 0)
+            {
+                values.Add(new SExpr.List(new List<SExpr>()));
+            }
             
             return new SExpr.List(values);
         }
@@ -154,6 +160,12 @@ namespace YispSharp.Utils
             while (MatchToken(TokenType.LeftParentheses))
             {
                 condPairs.Add(List());
+
+                // Check for valid count
+                if ((condPairs.Last() as SExpr.List).Values.Count != 2)
+                {
+                    Error(PreviousToken(), "Expected two arguments for a conditional list pair.");
+                }
             }
             ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in cond control flow.");
 
