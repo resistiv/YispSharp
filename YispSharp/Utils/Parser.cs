@@ -49,9 +49,13 @@ namespace YispSharp.Utils
 
         private SExpr Atom()
         {
-            if (MatchToken(TokenType.Number, TokenType.String, TokenType.Symbol))
+            if (MatchToken(TokenType.Number, TokenType.String))
             {
                 return new SExpr.Atom(PreviousToken().Literal);
+            }
+            else if (MatchToken(TokenType.Symbol))
+            {
+                return new SExpr.Atom(PreviousToken());
             }
             else if (MatchToken(TokenType.True))
             {

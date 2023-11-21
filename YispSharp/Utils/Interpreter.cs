@@ -53,9 +53,33 @@ namespace YispSharp.Utils
             {
                 return false;
             }
+            // Specified in Instructions.md: "Returns () when either expression is a larger list."
+            else if (a is List<object> || b is List<object>)
+            {
+                return false;
+            }
             else
             {
                 return a.Equals(b);
+            }
+        }
+
+        private bool IsSymbol(object obj)
+        {
+            if (obj is Token t)
+            {
+                if (t.Type == TokenType.Symbol || Scanner.Keywords.ContainsValue(t.Type))
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                return false;
             }
         }
 
@@ -65,9 +89,9 @@ namespace YispSharp.Utils
             { 
                 return false;
             }
-            else if (obj is bool)
+            else if (obj is bool b)
             {
-                return (bool)obj;
+                return b;
             }
             else
             {
@@ -86,20 +110,37 @@ namespace YispSharp.Utils
                 string output = "(";
                 bool lastIsNil = (l.Last() == null);
 
+                // Traverse list elements
                 for (int i = 0; i < l.Count; i++)
                 {
+                    // If the we're at the last element, we have to be non-nil, so output a dot to indicate
                     bool isLast = (i == l.Count - 1);
                     if (isLast)
                     {
                         output += ". ";
                     }
 
-                    output += l[i] == null ? "()" : l[i].ToString();
+                    // Figure out the output type
+                    if (l[i] == null)
+                    {
+                        output += "()";
+                    }
+                    else if (l[i] is List<object>)
+                    {
+                        // Recurse on lists
+                        output += Stringify(l[i]);
+                    }
+                    else
+                    {
+                        output += l[i].ToString();
+                    }
 
+                    // If we're at the second-to-last element and the last element is nil, we're done
                     if (lastIsNil && i == l.Count - 2)
                     {
                         break;
                     }
+                    // Otherwise, print separator
                     else if (!isLast)
                     {
                         output += " ";
@@ -117,9 +158,9 @@ namespace YispSharp.Utils
                 }
                 return text;
             }
-            else if (obj is bool)
+            else if (obj is bool b)
             {
-                if ((bool)obj)
+                if (b)
                 {
                     return "t";
                 }
@@ -130,12 +171,14 @@ namespace YispSharp.Utils
             }
             else
             {
+                // No clue what we've encountered, leave it up to god
                 return obj.ToString();
             }
         }
 
         public object VisitAtomSExpr(SExpr.Atom expr)
         {
+            // TODO: Add variable resolution
             return expr.Value;
         }
 
@@ -159,28 +202,38 @@ namespace YispSharp.Utils
                     CheckNumberOperands(expr.Operator, left, right);
                     return (double)left / (double)right;
                 case TokenType.Equal:
-                    return IsEqual(left, right);
+                    return IsEqual(left, right) ? true : null; ;
                 case TokenType.LessThan:
                     CheckNumberOperands(expr.Operator, left, right);
-                    return (double)left < (double)right;
+                    return ((double)left < (double)right) ? true : null;
                 case TokenType.GreaterThan:
                     CheckNumberOperands(expr.Operator, left, right);
-                    return (double)left > (double)right;
+                    return ((double)left > (double)right) ? true : null;
                 case TokenType.Cons:
-                    if (right is not List<object>)
+                    if (right is List<object> consList)
                     {
-                        return new List<object>() { left, right };
+                        return consList.Prepend(left).ToList();
                     }
                     else
                     {
-                        return (right as List<object>).Prepend(left).ToList();
+                        return new List<object>() { left, right };
                     }
                 case TokenType.AndP:
-                    return IsTruthy(left) && IsTruthy(right);
+                    return (IsTruthy(left) && IsTruthy(right)) ? true : null;
                 case TokenType.OrP:
-                    return IsTruthy(left) || IsTruthy(right);
+                    return (IsTruthy(left) || IsTruthy(right)) ? true : null;
+                // FIXME: How is this implemented in other interpreters?
+                // From what I can tell, the only meaningful check this can make is for symbols in Yisp...
                 case TokenType.EqP:
-                    return ReferenceEquals(left, right);
+                    /*if (left is Token l && right is Token r && l.Type == TokenType.Symbol && l.Type == r.Type && l.Lexeme.Equals(r.Lexeme))
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        return null;
+                    }*/
+                    return ReferenceEquals(left, right) ? true : null;
                 default:
                     return null;
             }
@@ -225,19 +278,40 @@ namespace YispSharp.Utils
             switch (expr.Operator.Type)
             {
                 case TokenType.Car:
-                    return (right as List<object>)[0];
+                    if (right is List<object> carList)
+                    {
+                        return carList[0];
+                    }
+                    else
+                    {
+                        throw new RuntimeException(expr.Operator, "Operand must be a list.");
+                    }
                 case TokenType.Cdr:
-                    return ((List<object>)right).Skip(1);
+                    if (right is List<object> cdrList)
+                    {
+                        if (cdrList.Count == 2)
+                        {
+                            return cdrList[1];
+                        }
+                        else
+                        {
+                            return cdrList.Skip(1).ToList();
+                        }
+                    }
+                    else
+                    {
+                        throw new RuntimeException(expr.Operator, "Operand must be a list.");
+                    }
                 case TokenType.NumberP:
                     return right is double;
                 case TokenType.SymbolP:
-                    return right is Token t && t.Type == TokenType.Symbol;
+                    return IsSymbol(right) ? true : null;
                 case TokenType.NotP:
-                    return !IsTruthy(right);
+                    return !IsTruthy(right) ? true : null;
                 case TokenType.ListP:
-                    return right is List<object>;
+                    return right is List<object> || right == null ? true : null;
                 case TokenType.NilP:
-                    return right == null ? null : true;
+                    return right == null ? true : null;
                 default:
                     return null;
             }

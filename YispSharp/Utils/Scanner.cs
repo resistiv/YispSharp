@@ -13,7 +13,7 @@ namespace YispSharp.Utils
         private int _currentIndex = 0;
         private int _line = 1;
 
-        private static readonly Dictionary<string, TokenType> Keywords = new()
+        public static readonly Dictionary<string, TokenType> Keywords = new()
         {
             { "define", TokenType.Define },
             { "set", TokenType.Set },
