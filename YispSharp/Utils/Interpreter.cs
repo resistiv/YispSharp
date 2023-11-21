@@ -241,7 +241,15 @@ namespace YispSharp.Utils
 
         public object VisitCondSExpr(SExpr.Cond expr)
         {
-            throw new NotImplementedException();
+            foreach (Tuple<SExpr, SExpr> pair in expr.Conditions)
+            {
+                object cond = Evaluate(pair.Item1);
+                if (IsTruthy(cond))
+                {
+                    return Evaluate(pair.Item2);
+                }
+            }
+            throw new RuntimeException(expr.Operator, "No condition in cond evaluated to true.");
         }
 
         public object VisitDefineSExpr(SExpr.Define expr)

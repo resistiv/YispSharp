@@ -365,5 +365,20 @@ namespace YispTester
 
             Assert.AreEqual(expected, output);
         }
+
+        [TestMethod]
+        public void CondTest()
+        {
+            string code = "(cond (= 1 2) 1 (= 1 1) 2 t 3)\n" +
+                          "(cond (= 1 1) 1 (= 1 1) 2 t 3)\n" +
+                          "(cond (= 1 2) 1 (= 1 2) 2 t 3)";
+            string expected = "2\n" +
+                              "1\n" +
+                              "3";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
     }
 }

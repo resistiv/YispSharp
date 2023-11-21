@@ -140,10 +140,12 @@
         /// </summary>
         public class Cond : SExpr
         {
-            public readonly List<SExpr> Conditions;
+            public readonly Token Operator;
+            public readonly List<Tuple<SExpr, SExpr>> Conditions;
 
-            public Cond(List<SExpr> conditions)
+            public Cond(Token op, List<Tuple<SExpr, SExpr>> conditions)
             {
+                Operator = op;
                 Conditions = conditions;
             }
 

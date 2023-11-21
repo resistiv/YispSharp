@@ -159,21 +159,17 @@ namespace YispSharp.Utils
 
         private SExpr Cond()
         {
+            Token op = PreviousToken();
+
             // Read conditions and results
-            List<SExpr> condPairs = new();
-            while (MatchToken(TokenType.LeftParentheses))
+            List<Tuple<SExpr, SExpr>> condPairs = new();
+            while (!MatchToken(TokenType.RightParentheses))
             {
-                condPairs.Add(List());
-
-                // Check for valid count
-                if ((condPairs.Last() as SExpr.List).Values.Count != 2)
-                {
-                    Error(PreviousToken(), "Expected two arguments for a conditional list pair.");
-                }
+                Tuple<SExpr, SExpr> pair = new(SExpression(), SExpression());
+                condPairs.Add(pair);
             }
-            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in cond control flow.");
 
-            return new SExpr.Cond(condPairs);
+            return new SExpr.Cond(op, condPairs);
         }
 
         /// <summary>
