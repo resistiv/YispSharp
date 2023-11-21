@@ -35,4 +35,4 @@ Tests can be built and run using the following command:
 ```
 dotnet test
 ```
-The number of successful and failed tests will be displayed.
+The number of successful and failed tests will be displayed. Of important note, some tests will be noted as being skipped; these test sets were used early in development for things like Scanner and Parser testing, and are no longer applicable in the program's current state, thus they are NOT failed tests.
