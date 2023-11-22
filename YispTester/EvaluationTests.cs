@@ -11,7 +11,7 @@ namespace YispTester
             string code = "1\n" +
                           "50.75\n" +
                           "()\n" +
-                          "(1 2 3)";
+                          "(list 1 2 3)";
             string expected = "1\n" +
                               "50.75\n" +
                               "()\n" +
@@ -109,9 +109,9 @@ namespace YispTester
                           "(= 28 (+ 19 9))\n" +
                           "(= 0.25 0.25)\n" +
                           "(= 1 2)\n" +
-                          "(= (1 2) 1)\n" +
-                          "(= 3 (4 5))\n" +
-                          "(= (1 2 3) (1 2 3))\n" +
+                          "(= (list 1 2) 1)\n" +
+                          "(= 3 (list 4 5))\n" +
+                          "(= (list 1 2 3) (list 1 2 3))\n" +
                           "(= () ())";
             string expected = "t\n" +
                               "t\n" +
@@ -186,9 +186,9 @@ namespace YispTester
                           "(cons 1 (cons 2 ()))\n" +
                           "(cons 1 (cons 2 (cons 3 ())))\n" +
                           "(cons 1 2)\n" +
-                          "(cons 1 (2 3 4 5))\n" +
-                          "(cons (1 2) (3 4 5))\n" +
-                          "(cons (1 2) ())\n" +
+                          "(cons 1 (list 2 3 4 5))\n" +
+                          "(cons (list 1 2) (list 3 4 5))\n" +
+                          "(cons (list 1 2) ())\n" +
                           "(cons () ())\n" +
                           "(cons () (cons () ()))";
             string expected = "(1)\n" +
@@ -209,16 +209,16 @@ namespace YispTester
         [TestMethod]
         public void CarCdrTest()
         {
-            string code = "(car (1 2 3 4 5))\n" +
-                          "(cdr (1 2 3 4 5))\n" +
-                          "(car (cdr (1 2 3 4 5)))\n" +
-                          "(cdr (cdr (1 2 3 4 5)))\n" +
-                          "(car (cdr (cdr (1 2 3 4 5))))\n" +
-                          "(cdr (cdr (cdr (1 2 3 4 5))))\n" +
-                          "(car (cdr (cdr (cdr (1 2 3 4 5)))))\n" +
-                          "(cdr (cdr (cdr (cdr (1 2 3 4 5)))))\n" +
-                          "(car (cdr (cdr (cdr (cdr (1 2 3 4 5))))))\n" +
-                          "(cdr (cdr (cdr (cdr (cdr (1 2 3 4 5))))))";
+            string code = "(car (list 1 2 3 4 5))\n" +
+                          "(cdr (list 1 2 3 4 5))\n" +
+                          "(car (cdr (list 1 2 3 4 5)))\n" +
+                          "(cdr (cdr (list 1 2 3 4 5)))\n" +
+                          "(car (cdr (cdr (list 1 2 3 4 5))))\n" +
+                          "(cdr (cdr (cdr (list 1 2 3 4 5))))\n" +
+                          "(car (cdr (cdr (cdr (list 1 2 3 4 5)))))\n" +
+                          "(cdr (cdr (cdr (cdr (list 1 2 3 4 5)))))\n" +
+                          "(car (cdr (cdr (cdr (cdr (list 1 2 3 4 5))))))\n" +
+                          "(cdr (cdr (cdr (cdr (cdr (list 1 2 3 4 5))))))";
             string expected = "1\n" +
                               "(2 3 4 5)\n" +
                               "2\n" +
@@ -243,14 +243,13 @@ namespace YispTester
                           "(number? (+ 1 2))\n" +
                           "(number? 1.2345)\n" +
                           "(number? ())\n" +
-                          "(number? (1 2 3 4 5))\n" +
+                          "(number? (list 1 2 3 4 5))";
                           // FIXME: Change to quote once implemented
-                          "(number? abc)";
+                          //"(number? abc)";
             string expected = "t\n" +
                               "t\n" +
                               "t\n" +
                               "t\n" +
-                              "()\n" +
                               "()\n" +
                               "()";
 
@@ -264,15 +263,14 @@ namespace YispTester
         {
             string code = "(symbol? ())\n" +
                           "(symbol? 123)\n" +
-                          "(symbol? (1 2 3 4 5))\n" +
-                          "(symbol? 1.2345)\n" +
+                          "(symbol? (list 1 2 3 4 5))\n" +
+                          "(symbol? 1.2345)";
                           // FIXME: Change to quote once implemented
-                          "(symbol? abc)\n";
+                          //"(symbol? abc)\n";
             string expected = "()\n" +
                               "()\n" +
                               "()\n" +
-                              "()\n" +
-                              "t";
+                              "()";
 
             string output = Tools.RunCode(code);
 
@@ -284,14 +282,13 @@ namespace YispTester
         {
             string code = "(list? ())\n" +
                           "(list? 123)\n" +
-                          "(list? (1 2 3 4 5))\n" +
-                          "(list? 1.2345)\n" +
+                          "(list? (list 1 2 3 4 5))\n" +
+                          "(list? 1.2345)";
                           // FIXME: Change to quote once implemented
-                          "(list? abc)";
+                          //"(list? abc)";
             string expected = "t\n" +
                               "()\n" +
                               "t\n" +
-                              "()\n" +
                               "()";
 
             string output = Tools.RunCode(code);
@@ -304,12 +301,11 @@ namespace YispTester
         {
             string code = "(nil? ())\n" +
                           "(nil? 123)\n" +
-                          "(nil? (1 2 3 4 5))\n" +
-                          "(nil? 1.2345)\n" +
+                          "(nil? (list 1 2 3 4 5))\n" +
+                          "(nil? 1.2345)";
                           // FIXME: Change to quote once implemented
-                          "(nil? abc)";
+                          //"(nil? abc)";
             string expected = "t\n" +
-                              "()\n" +
                               "()\n" +
                               "()\n" +
                               "()";
@@ -323,8 +319,8 @@ namespace YispTester
         public void AndPTest()
         {
             string code = "(and? 1 1)\n" +
-                          "(and? 1 (1 2 3))\n" +
-                          "(and? (1 2 3) 1)\n" +
+                          "(and? 1 (list 1 2 3))\n" +
+                          "(and? (list 1 2 3) 1)\n" +
                           "(and? (= 1 1) (= 1 2))\n" +
                           "(and? (= 1 1) (= 1 1))\n" +
                           "(and? 1 ())\n" +
@@ -346,8 +342,8 @@ namespace YispTester
         public void OrPTest()
         {
             string code = "(or? 1 1)\n" +
-                          "(or? () (1 2 3))\n" +
-                          "(or? (1 2 3) ())\n" +
+                          "(or? () (list 1 2 3))\n" +
+                          "(or? (list 1 2 3) ())\n" +
                           "(or? (= 1 1) (= 1 2))\n" +
                           "(or? (= 1 1) (= 1 1))\n" +
                           "(or? () ())";
@@ -371,7 +367,7 @@ namespace YispTester
                           "(not? ())\n" +
                           "(not? (= 1 1))\n" +
                           "(not? 1)\n" +
-                          "(not? (1 2 3 4 5))";
+                          "(not? (list 1 2 3 4 5))";
             string expected = "()\n" +
                               "t\n" +
                               "()\n" +

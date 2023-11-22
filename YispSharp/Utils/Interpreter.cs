@@ -341,5 +341,10 @@ namespace YispSharp.Utils
             _environment.Define(stmt.Name.Lexeme, value);
             return null;
         }
+
+        public object VisitCallSExpr(SExpr.Call expr)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

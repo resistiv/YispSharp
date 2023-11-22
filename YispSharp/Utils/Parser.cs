@@ -109,14 +109,25 @@ namespace YispSharp.Utils
             {
                 return Cond();
             }
+            // Reject any set or definition occuring in nested code
             else if (MatchToken(TokenType.Set, TokenType.Define))
             {
                 throw Error(PreviousToken(), "Define & set are not allowed outside of top-level statements.");
             }
             // Raw list
-            else
+            else if (MatchToken(TokenType.List))
             {
                 return PlainList();
+            }
+            // Nil
+            else if (MatchToken(TokenType.RightParentheses))
+            {
+                return new SExpr.List(new List<SExpr>());
+            }
+            // Function call
+            else
+            {
+                return Call();
             }
         }
 
@@ -191,6 +202,19 @@ namespace YispSharp.Utils
             }
 
             return new SExpr.Cond(op, condPairs);
+        }
+
+        private SExpr Call()
+        {
+            Token funcName = ConsumeToken(TokenType.Symbol, "Expected symbol in function call.");
+
+            List<SExpr> args = new();
+            while (!MatchToken(TokenType.RightParentheses))
+            {
+                args.Add(SExpression());
+            }
+
+            return new SExpr.Call(funcName, args);
         }
 
         /// <summary>

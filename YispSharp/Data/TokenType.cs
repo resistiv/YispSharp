@@ -21,6 +21,7 @@
         // Functions
         Define,
         Set,
+        List,
         Cons,
         Cond,
         Car,

@@ -17,6 +17,7 @@ namespace YispSharp.Utils
         {
             { "define", TokenType.Define },
             { "set", TokenType.Set },
+            { "list", TokenType.List },
             { "cons", TokenType.Cons },
             { "cond", TokenType.Cond },
             { "car", TokenType.Car },
