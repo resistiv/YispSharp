@@ -6,6 +6,23 @@ namespace YispTester
     public class EvaluationTests
     {
         [TestMethod]
+        public void BasicsTest()
+        {
+            string code = "1\n" +
+                          "50.75\n" +
+                          "()\n" +
+                          "(1 2 3)";
+            string expected = "1\n" +
+                              "50.75\n" +
+                              "()\n" +
+                              "(1 2 3)";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
         public void AdditionTest()
         {
             string code = "(+ 1 2)\n" +
