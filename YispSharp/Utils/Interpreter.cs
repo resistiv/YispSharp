@@ -1,24 +1,21 @@
 ﻿using YispSharp.Data;
 using YispSharp.Exceptions;
+using Environment = YispSharp.Data.Environment;
 
 namespace YispSharp.Utils
 {
-    public class Interpreter : SExpr.IVisitor<object>
+    public class Interpreter : SExpr.IVisitor<object>, Stmt.IVisitor<object>
     {
-        public void Interpret(List<SExpr> expr)
-        {
-            foreach (SExpr sexpr in expr)
-            {
-                Interpret(sexpr);
-            }
-        }
+        private Environment _environment = new();
 
-        private void Interpret(SExpr expr)
+        public void Interpret(List<Stmt> statements)
         {
             try
             {
-                object value = Evaluate(expr);
-                Console.WriteLine(Stringify(value));
+                foreach (Stmt statement in statements)
+                {
+                    Execute(statement);
+                }
             }
             catch (RuntimeException e)
             {
@@ -29,6 +26,11 @@ namespace YispSharp.Utils
         private object Evaluate(SExpr expr)
         {
             return expr.Accept(this);
+        }
+
+        private void Execute(Stmt stmt)
+        {
+            stmt.Accept(this);
         }
 
         private void CheckNumberOperands(Token op, object left, object right)
@@ -178,8 +180,14 @@ namespace YispSharp.Utils
 
         public object VisitAtomSExpr(SExpr.Atom expr)
         {
-            // TODO: Add variable resolution
-            return expr.Value;
+            if (expr.Value is Token t && t.Type == TokenType.Symbol)
+            {
+                return _environment.Get(t);
+            }
+            else
+            {
+                return expr.Value;
+            }
         }
 
         public object VisitBinarySExpr(SExpr.Binary expr)
@@ -252,11 +260,6 @@ namespace YispSharp.Utils
             throw new RuntimeException(expr.Operator, "No condition in cond evaluated to true.");
         }
 
-        public object VisitDefineSExpr(SExpr.Define expr)
-        {
-            throw new NotImplementedException();
-        }
-
         public object VisitListSExpr(SExpr.List expr)
         {
             if (expr.Values.Count == 0)
@@ -272,11 +275,6 @@ namespace YispSharp.Utils
                 }
                 return outVals;
             }
-        }
-
-        public object VisitSetSExpr(SExpr.Set expr)
-        {
-            throw new NotImplementedException();
         }
 
         public object VisitUnarySExpr(SExpr.Unary expr)
@@ -323,6 +321,25 @@ namespace YispSharp.Utils
                 default:
                     return null;
             }
+        }
+
+        public object VisitSExpressionStmt(Stmt.SExpression stmt)
+        {
+            object result = Evaluate(stmt.Expression);
+            Console.WriteLine(Stringify(result));
+            return null;
+        }
+
+        public object VisitDefineStmt(Stmt.Define stmt)
+        {
+            throw new NotImplementedException();
+        }
+
+        public object VisitSetStmt(Stmt.Set stmt)
+        {
+            object value = Evaluate(stmt.Value);
+            _environment.Define(stmt.Name.Lexeme, value);
+            return null;
         }
     }
 }

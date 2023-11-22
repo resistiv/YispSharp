@@ -16,15 +16,15 @@ namespace YispSharp.Utils
             _tokens = tokens;
         }
 
-        public List<SExpr> Parse()
+        public List<Stmt> Parse()
         {
-            List<SExpr> sexprs = new();
+            List<Stmt> statements = new();
             
             while (!AtEnd())
             {
                 try
                 {
-                    sexprs.Add(SExpression());
+                    statements.Add(Statement());
                 }
                 catch (ParsingException)
                 {
@@ -32,7 +32,34 @@ namespace YispSharp.Utils
                 }
             }
 
-            return sexprs;
+            return statements;
+        }
+
+        private Stmt Statement()
+        {
+            if (MatchToken(TokenType.LeftParentheses))
+            {
+                // Define statement
+                if (MatchToken(TokenType.Define))
+                {
+                    return Define();
+                }
+                // Set statement
+                else if (MatchToken(TokenType.Set))
+                {
+                    return Set();
+                }
+                // Else, must be some sort of list expression
+                else
+                {
+                    return new Stmt.SExpression(List());
+                }
+            }
+            // Must be an atom
+            else
+            {
+                return new Stmt.SExpression(Atom());
+            }
         }
 
         private SExpr SExpression()
@@ -77,20 +104,14 @@ namespace YispSharp.Utils
             {
                 return Unary();
             }
-            // Define statement
-            else if (MatchToken(TokenType.Define))
-            {
-                return Define();
-            }
-            // Set statement
-            else if (MatchToken(TokenType.Set))
-            {
-                return Set();
-            }
             // Cond control flow statement
             else if (MatchToken(TokenType.Cond))
             {
                 return Cond();
+            }
+            else if (MatchToken(TokenType.Set, TokenType.Define))
+            {
+                throw Error(PreviousToken(), "Define & set are not allowed outside of top-level statements.");
             }
             // Raw list
             else
@@ -134,7 +155,7 @@ namespace YispSharp.Utils
             return new SExpr.Unary(@operator, right);
         }
 
-        private SExpr Define()
+        private Stmt Define()
         {
             Token name = ConsumeToken(TokenType.Symbol, "Expected name in function definition.");
 
@@ -146,15 +167,15 @@ namespace YispSharp.Utils
 
             ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in function definition.");
 
-            return new SExpr.Define(name, args, body);
+            return new Stmt.Define(name, args, body);
         }
 
-        private SExpr Set()
+        private Stmt Set()
         {
             Token name = ConsumeToken(TokenType.Symbol, "Expected name in variable definition.");
             SExpr value = SExpression();
             ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in variable definition.");
-            return new SExpr.Set(name, value);
+            return new Stmt.Set(name, value);
         }
 
         private SExpr Cond()
@@ -290,6 +311,8 @@ namespace YispSharp.Utils
                     case TokenType.LeftParentheses:
                         return;
                 }
+
+                NextToken();
             }
         }
     }

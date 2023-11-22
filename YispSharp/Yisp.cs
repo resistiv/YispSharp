@@ -1,6 +1,7 @@
 ﻿using YispSharp.Data;
 using YispSharp.Exceptions;
 using YispSharp.Utils;
+using Environment = System.Environment;
 
 namespace YispSharp
 {
@@ -69,14 +70,14 @@ namespace YispSharp
             List<Token> tokens = scanner.ScanTokens();
 
             Parser parser = new(tokens);
-            List<SExpr> sexprs = parser.Parse();
+            List<Stmt> statements = parser.Parse();
 
             if (_hadError)
             {
                 return;
             }
 
-            interpreter.Interpret(sexprs);
+            interpreter.Interpret(statements);
         }
 
         /// <summary>

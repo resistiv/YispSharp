@@ -10,8 +10,6 @@
             public T VisitListSExpr(List expr);
             public T VisitBinarySExpr(Binary expr);
             public T VisitUnarySExpr(Unary expr);
-            public T VisitDefineSExpr(Define expr);
-            public T VisitSetSExpr(Set expr);
             public T VisitCondSExpr(Cond expr);
         }
 
@@ -90,48 +88,6 @@
             public override T Accept<T>(IVisitor<T> visitor)
             {
                 return visitor.VisitUnarySExpr(this);
-            }
-        }
-
-        /// <summary>
-        /// Represents a define statement.
-        /// </summary>
-        public class Define : SExpr
-        {
-            public readonly Token Name;
-            public readonly SExpr Arguments;
-            public readonly SExpr Body;
-
-            public Define(Token name, SExpr arguments, SExpr body)
-            {
-                Name = name;
-                Arguments = arguments;
-                Body = body;
-            }
-
-            public override T Accept<T>(IVisitor<T> visitor)
-            {
-                return visitor.VisitDefineSExpr(this);
-            }
-        }
-
-        /// <summary>
-        /// Represents a set statement.
-        /// </summary>
-        public class Set : SExpr
-        {
-            public readonly Token Name;
-            public readonly SExpr Value;
-
-            public Set(Token name, SExpr value)
-            {
-                Name = name;
-                Value = value;
-            }
-
-            public override T Accept<T>(IVisitor<T> visitor)
-            {
-                return visitor.VisitSetSExpr(this);
             }
         }
 

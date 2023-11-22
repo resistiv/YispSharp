@@ -11,7 +11,7 @@
         /// <param name="args">Optionally, a script for Y# to run.</param>
         public static void Main(string[] args)
         {
-            Console.WriteLine("YispSharp v0.1.0 - Kai NeSmith 2023");
+            Console.WriteLine("YispSharp v0.8.0 - Kai NeSmith 2023");
 
             if (args.Length > 1)
             {
