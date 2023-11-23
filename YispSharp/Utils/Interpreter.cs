@@ -17,7 +17,21 @@ namespace YispSharp.Utils
             { "-", new Subtraction() },
             { "*", new Multiplication() },
             { "/", new Division() },
-            { "list", new Functions.Native.List() },
+            { "=", new Equal() },
+            { ">", new Greater() },
+            { "<", new Lesser() },
+            { "list", new List() },
+            { "cons", new Cons() },
+            { "car", new Car() },
+            { "cdr", new Cdr() },
+            { "and?", new AndP() },
+            { "or?", new OrP() },
+            { "not?", new NotP() },
+            { "list?", new ListP() },
+            { "number?", new NumberP() },
+            { "symbol?", new SymbolP() },
+            { "nil?", new NilP() },
+            { "cond", new Conditional() },
         };
 
         public Interpreter()
@@ -107,9 +121,56 @@ namespace YispSharp.Utils
                 output += ")";
                 return output;
             }
+            else if (obj is bool b)
+            {
+                return b ? "t" : "()";
+            }
             else
             {
                 return obj.ToString();
+            }
+        }
+
+        /// <summary>
+        /// Check if two <see cref="object"/>s are equal.
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns></returns>
+        public bool IsEqual(object a, object b)
+        {
+            if (a == null && b == null)
+            {
+                return true;
+            }
+            else if (a == null)
+            {
+                return false;
+            }
+            else
+            {
+                return a.Equals(b);
+            }
+        }
+
+        /// <summary>
+        /// Checks if an <see cref="object"/> is truthy.
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
+        public bool IsTruthy(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            else if (obj is bool b)
+            {
+                return b;
+            }
+            else
+            {
+                return true;
             }
         }
 
