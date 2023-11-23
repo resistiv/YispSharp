@@ -6,7 +6,13 @@ namespace YispSharp.Utils
 {
     public class Interpreter : SExpr.IVisitor<object>, Stmt.IVisitor<object>
     {
-        private Environment _environment = new();
+        public readonly Environment Globals = new();
+        private Environment _environment;
+
+        public Interpreter()
+        {
+            _environment = Globals;
+        }
 
         public void Interpret(List<Stmt> statements)
         {
@@ -31,6 +37,20 @@ namespace YispSharp.Utils
         private void Execute(Stmt stmt)
         {
             stmt.Accept(this);
+        }
+
+        public void ExecuteFunction(SExpr expr, Environment env)
+        {
+            Environment previous = _environment;
+            try
+            {
+                _environment = env;
+                Evaluate(expr);
+            }
+            finally
+            {
+                _environment = previous;
+            }
         }
 
         private void CheckNumberOperands(Token op, object left, object right)
@@ -182,7 +202,16 @@ namespace YispSharp.Utils
         {
             if (expr.Value is Token t && t.Type == TokenType.Symbol)
             {
-                return _environment.Get(t);
+                object obj = _environment.Get(t);
+                // Lazy evaluation for functions
+                if (obj is SExpr s)
+                {
+                    return Evaluate(s);
+                }
+                else
+                {
+                    return obj;
+                }
             }
             else
             {
@@ -323,6 +352,11 @@ namespace YispSharp.Utils
             }
         }
 
+        public object VisitCallSExpr(SExpr.Call expr)
+        {
+            throw new NotImplementedException();
+        }
+
         public object VisitSExpressionStmt(Stmt.SExpression stmt)
         {
             object result = Evaluate(stmt.Expression);
@@ -340,11 +374,6 @@ namespace YispSharp.Utils
             object value = Evaluate(stmt.Value);
             _environment.Define(stmt.Name.Lexeme, value);
             return null;
-        }
-
-        public object VisitCallSExpr(SExpr.Call expr)
-        {
-            throw new NotImplementedException();
         }
     }
 }

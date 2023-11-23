@@ -35,10 +35,10 @@
         public class Define : Stmt
         {
             public readonly Token Name;
-            public readonly SExpr Arguments;
+            public readonly List<Token> Arguments;
             public readonly SExpr Body;
 
-            public Define(Token name, SExpr arguments, SExpr body)
+            public Define(Token name, List<Token> arguments, SExpr body)
             {
                 Name = name;
                 Arguments = arguments;

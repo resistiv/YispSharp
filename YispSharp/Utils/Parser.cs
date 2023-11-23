@@ -172,7 +172,11 @@ namespace YispSharp.Utils
 
             // Read argument names
             ConsumeToken(TokenType.LeftParentheses, "Expected list of arguments in function definition.");
-            SExpr args = List();
+            List<Token> args = new();
+            while (!MatchToken(TokenType.RightParentheses))
+            {
+                args.Add(ConsumeToken(TokenType.Symbol, "Expected symbol in argument list in function definition."));
+            }
 
             SExpr body = SExpression();
 
