@@ -70,14 +70,14 @@ namespace YispSharp
             List<Token> tokens = scanner.ScanTokens();
 
             Parser parser = new(tokens);
-            List<Stmt> statements = parser.Parse();
+            List<SExpr> expressions = parser.Parse();
 
             if (_hadError)
             {
                 return;
             }
 
-            interpreter.Interpret(statements);
+            interpreter.Interpret(expressions);
         }
 
         /// <summary>
@@ -113,7 +113,7 @@ namespace YispSharp
         /// <param name="error">The <see cref="RuntimeException"/> representing the error.</param>
         public static void RuntimeError(RuntimeException error)
         {
-            Console.WriteLine($"{error.Message}{Environment.NewLine}[line {error.Token.Line}]");
+            Console.WriteLine($"RuntimeException: {error.Message}");
             _hadRuntimeError = true;
         }
 

@@ -1,6 +1,5 @@
 ﻿using YispSharp.Data;
 using YispSharp.Utils;
-using Environment = YispSharp.Data.Environment;
 
 namespace YispSharp.Functions
 {
@@ -13,20 +12,14 @@ namespace YispSharp.Functions
             _definition = definition;
         }
 
-        public int Arity()
+        public Range Arity()
         {
-            return _definition.Arguments.Count;
+            return new Range(_definition.Arguments.Count, _definition.Arguments.Count);
         }
 
         public object Call(Interpreter interpreter, List<SExpr> arguments)
         {
-            Environment env = new(interpreter.Globals);
-            for (int i = 0; i < Arity(); i++)
-            {
-                env.Define(_definition.Arguments[i].Lexeme, arguments[i]);
-            }
-            interpreter.ExecuteFunction(_definition.Body, env);
-            return null;
+            throw new NotImplementedException();
         }
     }
 }

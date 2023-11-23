@@ -8,10 +8,6 @@
         {
             public T VisitAtomSExpr(Atom expr);
             public T VisitListSExpr(List expr);
-            public T VisitBinarySExpr(Binary expr);
-            public T VisitUnarySExpr(Unary expr);
-            public T VisitCondSExpr(Cond expr);
-            public T VisitCallSExpr(Call expr);
         }
 
         /// <summary>
@@ -47,88 +43,6 @@
             public override T Accept<T>(IVisitor<T> visitor)
             {
                 return visitor.VisitListSExpr(this);
-            }
-        }
-
-        /// <summary>
-        /// Represents an expression with two arguments.
-        /// </summary>
-        public class Binary : SExpr
-        {
-            public readonly Token Operator;
-            public readonly SExpr Left;
-            public readonly SExpr Right;
-
-            public Binary(Token @operator, SExpr left, SExpr right)
-            {
-                Operator = @operator;
-                Left = left;
-                Right = right;
-            }
-
-            public override T Accept<T>(IVisitor<T> visitor)
-            {
-                return visitor.VisitBinarySExpr(this);
-            }
-        }
-
-        /// <summary>
-        /// Represents an expression with one argument.
-        /// </summary>
-        public class Unary : SExpr
-        {
-            public readonly Token Operator;
-            public readonly SExpr Right;
-
-            public Unary(Token @operator, SExpr right)
-            {
-                Operator = @operator;
-                Right = right;
-            }
-
-            public override T Accept<T>(IVisitor<T> visitor)
-            {
-                return visitor.VisitUnarySExpr(this);
-            }
-        }
-
-        /// <summary>
-        /// Represents a cond control flow expression.
-        /// </summary>
-        public class Cond : SExpr
-        {
-            public readonly Token Operator;
-            public readonly List<Tuple<SExpr, SExpr>> Conditions;
-
-            public Cond(Token op, List<Tuple<SExpr, SExpr>> conditions)
-            {
-                Operator = op;
-                Conditions = conditions;
-            }
-
-            public override T Accept<T>(IVisitor<T> visitor)
-            {
-                return visitor.VisitCondSExpr(this);
-            }
-        }
-
-        /// <summary>
-        /// Represents a function call.
-        /// </summary>
-        public class Call : SExpr
-        {
-            public readonly Token Name;
-            public readonly List<SExpr> Arguments;
-
-            public Call(Token name, List<SExpr> arguments)
-            {
-                Name = name;
-                Arguments = arguments;
-            }
-
-            public override T Accept<T>(IVisitor<T> visitor)
-            {
-                return visitor.VisitCallSExpr(this);
             }
         }
     }

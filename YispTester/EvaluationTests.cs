@@ -26,12 +26,12 @@ namespace YispTester
         public void AdditionTest()
         {
             string code = "(+ 1 2)\n" +
-                          "(+ 3 4)\n" +
+                          "(+ 3 4 5 6)\n" +
                           "(+ (+ 1 2) 3)\n" +
                           "(+ 1 (+ 2 3))\n" +
                           "(+ 0.25 0.75)";
             string expected = "3\n" +
-                              "7\n" +
+                              "18\n" +
                               "6\n" +
                               "6\n" +
                               "1";
@@ -45,7 +45,7 @@ namespace YispTester
         public void SubtractionTest()
         {
             string code = "(- 2 1)\n" +
-                          "(- 1 2)\n" +
+                          "(- 1)\n" +
                           "(- (- 27 20) 4)\n" +
                           "(- 150 (- 40 31))\n" +
                           "(- 1.25 0.25)";
@@ -64,12 +64,12 @@ namespace YispTester
         public void MultiplicationTest()
         {
             string code = "(* 1 2)\n" +
-                          "(* 7 3)\n" +
+                          "(* 7 3 2)\n" +
                           "(* (* 2 3) 4)\n" +
                           "(* 25 (* 4 3))\n" +
                           "(* 4 0.25)";
             string expected = "2\n" +
-                              "21\n" +
+                              "42\n" +
                               "24\n" +
                               "300\n" +
                               "1";

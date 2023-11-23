@@ -5,7 +5,7 @@ namespace YispSharp.Functions
 {
     public interface ICallable
     {
-        public int Arity();
+        public Range Arity();
         public object Call(Interpreter interpreter, List<SExpr> arguments);
     }
 }

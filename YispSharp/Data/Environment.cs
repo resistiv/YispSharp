@@ -45,7 +45,7 @@ namespace YispSharp.Data
                 return Enclosing.Get(name);
             }
 
-            throw new RuntimeException(name, $"Undefined variable '{name.Lexeme}'.");
+            throw new RuntimeException($"Unknown symbol '{name.Lexeme}'.");
         }
     }
 }

@@ -13,27 +13,6 @@ namespace YispSharp.Utils
         private int _currentIndex = 0;
         private int _line = 1;
 
-        public static readonly Dictionary<string, TokenType> Keywords = new()
-        {
-            { "define", TokenType.Define },
-            { "set", TokenType.Set },
-            { "list", TokenType.List },
-            { "cons", TokenType.Cons },
-            { "cond", TokenType.Cond },
-            { "car", TokenType.Car },
-            { "cdr", TokenType.Cdr },
-            { "and?", TokenType.AndP },
-            { "or?", TokenType.OrP },
-            { "not?", TokenType.NotP },
-            { "number?", TokenType.NumberP },
-            { "symbol?", TokenType.SymbolP },
-            { "list?", TokenType.ListP },
-            { "nil?", TokenType.NilP },
-            { "eq?", TokenType.EqP },
-            // FIXME: Remove once quote is implemented
-            { "t", TokenType.True },
-        };
-
         /// <summary>
         /// Constructs a <see cref="Scanner"/>.
         /// </summary>
@@ -293,18 +272,16 @@ namespace YispSharp.Utils
             }
 
             string text = _source[_startIndex.._currentIndex];
-            TokenType type;
 
-            if (Keywords.ContainsKey(text))
+            // FIXME: Remove once quote is implemented.
+            if (text.Equals("t"))
             {
-                type = Keywords[text];
+                AddToken(TokenType.True, text);
             }
             else
             {
-                type = TokenType.Symbol;
+                AddToken(TokenType.Symbol, text);
             }
-
-            AddToken(type, text);
         }
     }
 }

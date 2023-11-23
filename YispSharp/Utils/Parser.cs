@@ -8,60 +8,51 @@ namespace YispSharp.Utils
         private readonly List<Token> _tokens;
         private int _current = 0;
 
-        private readonly TokenType[] _binaryTypes = { TokenType.Plus, TokenType.Minus, TokenType.Star, TokenType.Slash, TokenType.Equal, TokenType.LessThan, TokenType.GreaterThan, TokenType.Cons, TokenType.AndP, TokenType.OrP, TokenType.EqP };
-        private readonly TokenType[] _unaryTypes = { TokenType.Car, TokenType.Cdr, TokenType.NumberP, TokenType.SymbolP, TokenType.NotP, TokenType.ListP, TokenType.NilP };
+        public static readonly TokenType[] Operations =
+        {
+            TokenType.Plus, TokenType.Minus,
+            TokenType.Star, TokenType.Slash,
+            TokenType.Equal, TokenType.SingleQuote,
+            TokenType.GreaterThan, TokenType.LessThan,
+        };
 
+
+        /// <summary>
+        /// Accepts a list of <see cref="Token"/>s to parse.
+        /// </summary>
+        /// <param name="tokens">A list of <see cref="Token"/>s to parse.</param>
         public Parser(List<Token> tokens)
         {
             _tokens = tokens;
         }
 
-        public List<Stmt> Parse()
+        /// <summary>
+        /// Parses the previously provided <see cref="Token"/>s.
+        /// </summary>
+        /// <returns>A list of <see cref="SExpr"/>s, representing the parsed code.</returns>
+        public List<SExpr> Parse()
         {
-            List<Stmt> statements = new();
+            List<SExpr> expressions = new();
             
             while (!AtEnd())
             {
                 try
                 {
-                    statements.Add(Statement());
+                    expressions.Add(SExpression());
                 }
                 catch (ParsingException)
                 {
-                    SyncState();
+                    SynchronizeState();
                 }
             }
 
-            return statements;
+            return expressions;
         }
 
-        private Stmt Statement()
-        {
-            if (MatchToken(TokenType.LeftParentheses))
-            {
-                // Define statement
-                if (MatchToken(TokenType.Define))
-                {
-                    return Define();
-                }
-                // Set statement
-                else if (MatchToken(TokenType.Set))
-                {
-                    return Set();
-                }
-                // Else, must be some sort of list expression
-                else
-                {
-                    return new Stmt.SExpression(List());
-                }
-            }
-            // Must be an atom
-            else
-            {
-                return new Stmt.SExpression(Atom());
-            }
-        }
-
+        /// <summary>
+        /// Processes an s-expression.
+        /// </summary>
+        /// <returns></returns>
         private SExpr SExpression()
         {
             if (MatchToken(TokenType.LeftParentheses))
@@ -74,16 +65,21 @@ namespace YispSharp.Utils
             }
         }
 
+        /// <summary>
+        /// Processes an atom.
+        /// </summary>
+        /// <returns></returns>
         private SExpr Atom()
         {
             if (MatchToken(TokenType.Number, TokenType.String))
             {
                 return new SExpr.Atom(PreviousToken().Literal);
             }
-            else if (MatchToken(TokenType.Symbol))
+            else if (MatchToken(TokenType.Symbol) || MatchToken(Operations))
             {
                 return new SExpr.Atom(PreviousToken());
             }
+            // FIXME: Remove once quote is implemented
             else if (MatchToken(TokenType.True))
             {
                 return new SExpr.Atom(true);
@@ -92,46 +88,11 @@ namespace YispSharp.Utils
             throw Error(Peek(), "Expected atom.");
         }
 
+        /// <summary>
+        /// Processes a list.
+        /// </summary>
+        /// <returns></returns>
         private SExpr List()
-        {
-            // Binary operations
-            if (MatchToken(_binaryTypes))
-            {
-                return Binary();
-            }
-            // Unary operations
-            else if (MatchToken(_unaryTypes))
-            {
-                return Unary();
-            }
-            // Cond control flow statement
-            else if (MatchToken(TokenType.Cond))
-            {
-                return Cond();
-            }
-            // Reject any set or definition occuring in nested code
-            else if (MatchToken(TokenType.Set, TokenType.Define))
-            {
-                throw Error(PreviousToken(), "Define & set are not allowed outside of top-level statements.");
-            }
-            // Raw list
-            else if (MatchToken(TokenType.List))
-            {
-                return PlainList();
-            }
-            // Nil
-            else if (MatchToken(TokenType.RightParentheses))
-            {
-                return new SExpr.List(new List<SExpr>());
-            }
-            // Function call
-            else
-            {
-                return Call();
-            }
-        }
-
-        private SExpr PlainList()
         {
             // Read all values of list
             List<SExpr> values = new();
@@ -140,85 +101,7 @@ namespace YispSharp.Utils
                 values.Add(SExpression());
             }
 
-            // Add nil terminator
-            if (values.Count != 0)
-            {
-                values.Add(new SExpr.List(new List<SExpr>()));
-            }
-            
             return new SExpr.List(values);
-        }
-
-        private SExpr Binary()
-        {
-            Token @operator = PreviousToken();
-            SExpr left = SExpression();
-            SExpr right = SExpression();
-            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in binary expression.");
-            return new SExpr.Binary(@operator, left, right);
-        }
-
-        private SExpr Unary()
-        {
-            Token @operator = PreviousToken();
-            SExpr right = SExpression();
-            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in unary expression.");
-            return new SExpr.Unary(@operator, right);
-        }
-
-        private Stmt Define()
-        {
-            Token name = ConsumeToken(TokenType.Symbol, "Expected name in function definition.");
-
-            // Read argument names
-            ConsumeToken(TokenType.LeftParentheses, "Expected list of arguments in function definition.");
-            List<Token> args = new();
-            while (!MatchToken(TokenType.RightParentheses))
-            {
-                args.Add(ConsumeToken(TokenType.Symbol, "Expected symbol in argument list in function definition."));
-            }
-
-            SExpr body = SExpression();
-
-            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in function definition.");
-
-            return new Stmt.Define(name, args, body);
-        }
-
-        private Stmt Set()
-        {
-            Token name = ConsumeToken(TokenType.Symbol, "Expected name in variable definition.");
-            SExpr value = SExpression();
-            ConsumeToken(TokenType.RightParentheses, "Expected closing parentheses in variable definition.");
-            return new Stmt.Set(name, value);
-        }
-
-        private SExpr Cond()
-        {
-            Token op = PreviousToken();
-
-            // Read conditions and results
-            List<Tuple<SExpr, SExpr>> condPairs = new();
-            while (!MatchToken(TokenType.RightParentheses))
-            {
-                Tuple<SExpr, SExpr> pair = new(SExpression(), SExpression());
-                condPairs.Add(pair);
-            }
-
-            return new SExpr.Cond(op, condPairs);
-        }
-
-        private SExpr Call()
-        {
-            Token funcName = ConsumeToken(TokenType.Symbol, "Expected symbol in function call.");
-
-            List<SExpr> args = new();
-            while (!MatchToken(TokenType.RightParentheses))
-            {
-                args.Add(SExpression());
-            }
-
-            return new SExpr.Call(funcName, args);
         }
 
         /// <summary>
@@ -238,23 +121,6 @@ namespace YispSharp.Utils
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Attempts to consume a <see cref="Token"/>.
-        /// </summary>
-        /// <param name="type">The expected <see cref="TokenType"/> of the <see cref="Token"/>.</param>
-        /// <param name="message">A message detailing the expected <see cref="Token"/>.</param>
-        /// <exception cref="ParsingException"></exception>
-        /// <returns>A <see cref="Token"/> that was consumed.</returns>
-        private Token ConsumeToken(TokenType type, string message)
-        {
-            if (CheckToken(type))
-            {
-                return NextToken();
-            }
-
-            throw Error(Peek(), message);
         }
 
         /// <summary>
@@ -323,7 +189,11 @@ namespace YispSharp.Utils
             return new ParsingException();
         }
 
-        private void SyncState()
+
+        /// <summary>
+        /// Attempts to synchronize the state of the parser after encountering a <see cref="ParsingException"/>.
+        /// </summary>
+        private void SynchronizeState()
         {
             NextToken();
 
