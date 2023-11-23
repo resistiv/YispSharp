@@ -393,5 +393,22 @@ namespace YispTester
 
             Assert.AreEqual(expected, output);
         }
+
+        [TestMethod]
+        public void ListTest()
+        {
+            string code = "(list)\n" +
+                          "(list 1)\n" +
+                          "(list 1 2 3 4 5)\n" +
+                          "(list (list 1 2) 3 4 5)";
+            string expected = "()\n" +
+                              "(1)\n" +
+                              "(1 2 3 4 5)\n" +
+                              "((1 2) 3 4 5)";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
     }
 }

@@ -17,6 +17,7 @@ namespace YispSharp.Utils
             { "-", new Subtraction() },
             { "*", new Multiplication() },
             { "/", new Division() },
+            { "list", new Functions.Native.List() },
         };
 
         public Interpreter()
@@ -61,6 +62,50 @@ namespace YispSharp.Utils
             if (obj == null)
             {
                 return "()";
+            }
+            else if (obj is List<object> l)
+            {
+                string output = "(";
+                bool lastIsNil = (l.Last() == null);
+
+                // Traverse list elements
+                for (int i = 0; i < l.Count; i++)
+                {
+                    // If the we're at the last element, we have to be non-nil, so output a dot to indicate
+                    bool isLast = (i == l.Count - 1);
+                    if (isLast)
+                    {
+                        output += ". ";
+                    }
+
+                    // Figure out the output type
+                    if (l[i] == null)
+                    {
+                        output += "()";
+                    }
+                    else if (l[i] is List<object>)
+                    {
+                        // Recurse on lists
+                        output += Stringify(l[i]);
+                    }
+                    else
+                    {
+                        output += l[i].ToString();
+                    }
+
+                    // If we're at the second-to-last element and the last element is nil, we're done
+                    if (lastIsNil && i == l.Count - 2)
+                    {
+                        break;
+                    }
+                    // Otherwise, print separator
+                    else if (!isLast)
+                    {
+                        output += " ";
+                    }
+                }
+                output += ")";
+                return output;
             }
             else
             {
