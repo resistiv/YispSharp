@@ -5,16 +5,18 @@ namespace YispSharp.Functions
 {
     public class Function : ICallable
     {
-        private readonly Stmt.Define _definition;
+        private readonly List<Token> Arguments;
+        private readonly SExpr Body;
         
-        public Function(Stmt.Define definition)
+        public Function(List<Token> args, SExpr body)
         {
-            _definition = definition;
+            Arguments = args;
+            Body = body;
         }
 
         public Range Arity()
         {
-            return new Range(_definition.Arguments.Count, _definition.Arguments.Count);
+            return new Range(Arguments.Count, Arguments.Count);
         }
 
         public object Call(Interpreter interpreter, List<SExpr> arguments)

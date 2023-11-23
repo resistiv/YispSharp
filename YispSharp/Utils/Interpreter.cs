@@ -9,7 +9,7 @@ namespace YispSharp.Utils
     public class Interpreter : SExpr.IVisitor<object>
     {
         public readonly Environment Globals = new();
-        private Environment _environment;
+        public Environment Environment;
 
         private static readonly Dictionary<string, ICallable> _nativeFunctions = new()
         {
@@ -32,11 +32,12 @@ namespace YispSharp.Utils
             { "symbol?", new SymbolP() },
             { "nil?", new NilP() },
             { "cond", new Conditional() },
+            { "set", new Set() },
         };
 
         public Interpreter()
         {
-            _environment = Globals;
+            Environment = Globals;
             foreach (KeyValuePair<string, ICallable> kvp in _nativeFunctions)
             {
                 Globals.Define(kvp.Key, kvp.Value);
@@ -92,20 +93,8 @@ namespace YispSharp.Utils
                         output += ". ";
                     }
 
-                    // Figure out the output type
-                    if (l[i] == null)
-                    {
-                        output += "()";
-                    }
-                    else if (l[i] is List<object>)
-                    {
-                        // Recurse on lists
-                        output += Stringify(l[i]);
-                    }
-                    else
-                    {
-                        output += l[i].ToString();
-                    }
+                    // Stringify it!
+                    output += Stringify(l[i]);
 
                     // If we're at the second-to-last element and the last element is nil, we're done
                     if (lastIsNil && i == l.Count - 2)
@@ -124,6 +113,10 @@ namespace YispSharp.Utils
             else if (obj is bool b)
             {
                 return b ? "t" : "()";
+            }
+            else if (obj is string s)
+            {
+                return $"\"{s}\"";
             }
             else
             {
@@ -188,7 +181,7 @@ namespace YispSharp.Utils
         {
             if (expr.Value is Token t && (t.Type == TokenType.Symbol || Parser.Operations.Contains(t.Type)))
             {
-                return _environment.Get(t);
+                return Environment.Get(t);
             }
             else
             {
