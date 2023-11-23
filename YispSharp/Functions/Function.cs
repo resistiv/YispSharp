@@ -1,5 +1,6 @@
 ﻿using YispSharp.Data;
 using YispSharp.Utils;
+using Environment = YispSharp.Data.Environment;
 
 namespace YispSharp.Functions
 {
@@ -21,7 +22,25 @@ namespace YispSharp.Functions
 
         public object Call(Interpreter interpreter, List<SExpr> arguments)
         {
-            throw new NotImplementedException();
+            Environment env = new(interpreter.Globals);
+            for (int i = 0; i < Arguments.Count; i++)
+            {
+                env.Define(Arguments[i].Lexeme, interpreter.Evaluate(arguments[i]));
+            }
+
+            Environment prev = interpreter.Environment;
+            object result = null;
+            try
+            {
+                interpreter.Environment = env;
+                result = interpreter.Evaluate(Body);
+            }
+            finally
+            {
+                interpreter.Environment = prev;
+            }
+
+            return result;
         }
     }
 }

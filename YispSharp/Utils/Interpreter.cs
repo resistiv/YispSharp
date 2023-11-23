@@ -33,6 +33,7 @@ namespace YispSharp.Utils
             { "nil?", new NilP() },
             { "cond", new Conditional() },
             { "set", new Set() },
+            { "define", new Define() },
         };
 
         public Interpreter()
@@ -125,7 +126,7 @@ namespace YispSharp.Utils
         }
 
         /// <summary>
-        /// Check if two <see cref="object"/>s are equal.
+        /// Checks if two <see cref="object"/>s are equal.
         /// </summary>
         /// <param name="a"></param>
         /// <param name="b"></param>
