@@ -316,6 +316,27 @@ namespace YispTester
         }
 
         [TestMethod]
+        public void EqPTest()
+        {
+            string code = "(eq? () ())\n" +
+                          "(eq? 123 123)\n" +
+                          "(eq? (list 1 2 3 4 5) (list 1 2 3 4 5))\n" +
+                          "(eq? 1.2345 1.2345)\n" +
+                          "(eq? 'abc 'abc)\n" +
+                          "(set a 5)(eq? a a)";
+            string expected = "t\n" +
+                              "()\n" +
+                              "()\n" +
+                              "()\n" +
+                              "t\n" +
+                              "t";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
         public void AndPTest()
         {
             string code = "(and? 1 1)\n" +

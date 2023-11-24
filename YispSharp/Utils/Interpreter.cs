@@ -31,6 +31,7 @@ namespace YispSharp.Utils
             { "number?", new NumberP() },
             { "symbol?", new SymbolP() },
             { "nil?", new NilP() },
+            { "eq?", new EqP() },
             { "cond", new Conditional() },
             { "set", new Set() },
             { "define", new Define() },
