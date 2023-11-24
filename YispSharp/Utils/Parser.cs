@@ -12,7 +12,7 @@ namespace YispSharp.Utils
         {
             TokenType.Plus, TokenType.Minus,
             TokenType.Star, TokenType.Slash,
-            TokenType.Equal, TokenType.SingleQuote,
+            TokenType.Equal, 
             TokenType.GreaterThan, TokenType.LessThan,
         };
 
@@ -71,18 +71,25 @@ namespace YispSharp.Utils
         /// <returns></returns>
         private SExpr Atom()
         {
+            // Some literal
             if (MatchToken(TokenType.Number, TokenType.String))
             {
                 return new SExpr.Atom(PreviousToken().Literal);
             }
+            // Symbol or operation
             else if (MatchToken(TokenType.Symbol) || MatchToken(Operations))
             {
                 return new SExpr.Atom(PreviousToken());
             }
-            // FIXME: Remove once quote is implemented
-            else if (MatchToken(TokenType.True))
+            // Resolve apostrophe quote shorthand
+            else if (MatchToken(TokenType.SingleQuote))
             {
-                return new SExpr.Atom(true);
+                List<SExpr> vals = new()
+                {
+                    new SExpr.Atom(new Token(TokenType.Symbol, "quote", "quote", PreviousToken().Line)),
+                    SExpression(),
+                };
+                return new SExpr.List(vals);
             }
 
             throw Error(Peek(), "Expected atom.");

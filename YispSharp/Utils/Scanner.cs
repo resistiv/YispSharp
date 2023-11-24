@@ -272,16 +272,7 @@ namespace YispSharp.Utils
             }
 
             string text = _source[_startIndex.._currentIndex];
-
-            // FIXME: Remove once quote is implemented.
-            if (text.Equals("t"))
-            {
-                AddToken(TokenType.True, text);
-            }
-            else
-            {
-                AddToken(TokenType.Symbol, text);
-            }
+            AddToken(TokenType.Symbol, text);
         }
     }
 }

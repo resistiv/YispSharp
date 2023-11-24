@@ -34,6 +34,7 @@ namespace YispSharp.Utils
             { "cond", new Conditional() },
             { "set", new Set() },
             { "define", new Define() },
+            { "quote", new Quote() },
         };
 
         public Interpreter()
@@ -81,35 +82,7 @@ namespace YispSharp.Utils
             }
             else if (obj is List<object> l)
             {
-                string output = "(";
-                bool lastIsNil = (l.Last() == null);
-
-                // Traverse list elements
-                for (int i = 0; i < l.Count; i++)
-                {
-                    // If the we're at the last element, we have to be non-nil, so output a dot to indicate
-                    bool isLast = (i == l.Count - 1);
-                    if (isLast)
-                    {
-                        output += ". ";
-                    }
-
-                    // Stringify it!
-                    output += Stringify(l[i]);
-
-                    // If we're at the second-to-last element and the last element is nil, we're done
-                    if (lastIsNil && i == l.Count - 2)
-                    {
-                        break;
-                    }
-                    // Otherwise, print separator
-                    else if (!isLast)
-                    {
-                        output += " ";
-                    }
-                }
-                output += ")";
-                return output;
+                return StringifyList(l);
             }
             else if (obj is bool b)
             {
@@ -123,6 +96,44 @@ namespace YispSharp.Utils
             {
                 return obj.ToString();
             }
+        }
+
+        /// <summary>
+        /// Converts a list of items to human-readable output.
+        /// </summary>
+        /// <param name="l"></param>
+        /// <returns></returns>
+        public string StringifyList(List<object> l)
+        {
+            string output = "(";
+            bool lastIsNil = (l.Last() == null);
+
+            // Traverse list elements
+            for (int i = 0; i < l.Count; i++)
+            {
+                // If the we're at the last element, we have to be non-nil, so output a dot to indicate
+                bool isLast = (i == l.Count - 1);
+                if (isLast)
+                {
+                    output += ". ";
+                }
+
+                // Stringify it!
+                output += Stringify(l[i]);
+
+                // If we're at the second-to-last element and the last element is nil, we're done
+                if (lastIsNil && i == l.Count - 2)
+                {
+                    break;
+                }
+                // Otherwise, print separator
+                else if (!isLast)
+                {
+                    output += " ";
+                }
+            }
+            output += ")";
+            return output;
         }
 
         /// <summary>

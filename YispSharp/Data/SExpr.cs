@@ -26,6 +26,22 @@
             {
                 return visitor.VisitAtomSExpr(this);
             }
+
+            public override string ToString()
+            {
+                if (Value is string s)
+                {
+                    return $"\"{s}\"";
+                }
+                else if (Value is Token t)
+                {
+                    return t.Lexeme;
+                }
+                else
+                {
+                    return Value.ToString();
+                }
+            }
         }
 
         /// <summary>
@@ -43,6 +59,26 @@
             public override T Accept<T>(IVisitor<T> visitor)
             {
                 return visitor.VisitListSExpr(this);
+            }
+
+            public override string ToString()
+            {
+                string output = "(";
+
+                // Traverse list elements
+                for (int i = 0; i < Values.Count; i++)
+                {
+                    output += Values[i].ToString();
+
+                    // Print separator
+                    if (i != Values.Count - 1)
+                    {
+                        output += " ";
+                    }
+                }
+
+                output += ")";
+                return output;
             }
         }
     }

@@ -6,16 +6,16 @@ namespace YispTester
     public class EvaluationTests
     {
         [TestMethod]
-        public void BasicsTest()
+        public void AtomsTest()
         {
             string code = "1\n" +
                           "50.75\n" +
                           "()\n" +
-                          "(list 1 2 3)";
+                          "\"Hello\"";
             string expected = "1\n" +
                               "50.75\n" +
                               "()\n" +
-                              "(1 2 3)";
+                              "\"Hello\"";
 
             string output = Tools.RunCode(code);
 
@@ -243,13 +243,13 @@ namespace YispTester
                           "(number? (+ 1 2))\n" +
                           "(number? 1.2345)\n" +
                           "(number? ())\n" +
-                          "(number? (list 1 2 3 4 5))";
-                          // FIXME: Change to quote once implemented
-                          //"(number? abc)";
+                          "(number? (list 1 2 3 4 5))\n" +
+                          "(number? 'abc)";
             string expected = "t\n" +
                               "t\n" +
                               "t\n" +
                               "t\n" +
+                              "()\n" +
                               "()\n" +
                               "()";
 
@@ -264,13 +264,13 @@ namespace YispTester
             string code = "(symbol? ())\n" +
                           "(symbol? 123)\n" +
                           "(symbol? (list 1 2 3 4 5))\n" +
-                          "(symbol? 1.2345)";
-                          // FIXME: Change to quote once implemented
-                          //"(symbol? abc)\n";
+                          "(symbol? 1.2345)\n" +
+                          "(symbol? 'abc)";
             string expected = "()\n" +
                               "()\n" +
                               "()\n" +
-                              "()";
+                              "()\n" +
+                              "t";
 
             string output = Tools.RunCode(code);
 
@@ -283,12 +283,12 @@ namespace YispTester
             string code = "(list? ())\n" +
                           "(list? 123)\n" +
                           "(list? (list 1 2 3 4 5))\n" +
-                          "(list? 1.2345)";
-                          // FIXME: Change to quote once implemented
-                          //"(list? abc)";
+                          "(list? 1.2345)\n" +
+                          "(list? 'abc)";
             string expected = "t\n" +
                               "()\n" +
                               "t\n" +
+                              "()\n" +
                               "()";
 
             string output = Tools.RunCode(code);
@@ -302,10 +302,10 @@ namespace YispTester
             string code = "(nil? ())\n" +
                           "(nil? 123)\n" +
                           "(nil? (list 1 2 3 4 5))\n" +
-                          "(nil? 1.2345)";
-                          // FIXME: Change to quote once implemented
-                          //"(nil? abc)";
+                          "(nil? 1.2345)\n" +
+                          "(nil? 'abc)";
             string expected = "t\n" +
+                              "()\n" +
                               "()\n" +
                               "()\n" +
                               "()";
@@ -362,8 +362,7 @@ namespace YispTester
         [TestMethod]
         public void NotPTest()
         {
-            // FIXME: Change to quote once implemented
-            string code = "(not? t)\n" +
+            string code = "(not? 't)\n" +
                           "(not? ())\n" +
                           "(not? (= 1 1))\n" +
                           "(not? 1)\n" +
@@ -382,9 +381,9 @@ namespace YispTester
         [TestMethod]
         public void CondTest()
         {
-            string code = "(cond (= 1 2) 1 (= 1 1) 2 t 3)\n" +
-                          "(cond (= 1 1) 1 (= 1 1) 2 t 3)\n" +
-                          "(cond (= 1 2) 1 (= 1 2) 2 t 3)";
+            string code = "(cond (= 1 2) 1 (= 1 1) 2 't 3)\n" +
+                          "(cond (= 1 1) 1 (= 1 1) 2 't 3)\n" +
+                          "(cond (= 1 2) 1 (= 1 2) 2 't 3)";
             string expected = "2\n" +
                               "1\n" +
                               "3";
