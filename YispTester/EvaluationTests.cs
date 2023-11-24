@@ -113,16 +113,16 @@ namespace YispTester
                           "(= 3 (list 4 5))\n" +
                           "(= (list 1 2 3) (list 1 2 3))\n" +
                           "(= () ())";
-            string expected = "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
+            string expected = "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
                               "()\n" +
                               "()\n" +
                               "()\n" +
                               "()\n" +
-                              "t";
+                              "T";
 
             string output = Tools.RunCode(code);
 
@@ -140,11 +140,11 @@ namespace YispTester
                           "(< 1 1)\n" +
                           "(< 2 1)\n" +
                           "(< 3.73 3.72)";
-            string expected = "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
+            string expected = "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
                               "()\n" +
                               "()\n" +
                               "()";
@@ -165,11 +165,11 @@ namespace YispTester
                           "(> 1 1)\n" +
                           "(> 1 2)\n" +
                           "(> 3.72 3.73)";
-            string expected = "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
+            string expected = "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
                               "()\n" +
                               "()\n" +
                               "()";
@@ -245,10 +245,10 @@ namespace YispTester
                           "(number? ())\n" +
                           "(number? (list 1 2 3 4 5))\n" +
                           "(number? 'abc)";
-            string expected = "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
+            string expected = "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
                               "()\n" +
                               "()\n" +
                               "()";
@@ -270,7 +270,7 @@ namespace YispTester
                               "()\n" +
                               "()\n" +
                               "()\n" +
-                              "t";
+                              "T";
 
             string output = Tools.RunCode(code);
 
@@ -285,9 +285,9 @@ namespace YispTester
                           "(list? (list 1 2 3 4 5))\n" +
                           "(list? 1.2345)\n" +
                           "(list? 'abc)";
-            string expected = "t\n" +
+            string expected = "T\n" +
                               "()\n" +
-                              "t\n" +
+                              "T\n" +
                               "()\n" +
                               "()";
 
@@ -304,7 +304,7 @@ namespace YispTester
                           "(nil? (list 1 2 3 4 5))\n" +
                           "(nil? 1.2345)\n" +
                           "(nil? 'abc)";
-            string expected = "t\n" +
+            string expected = "T\n" +
                               "()\n" +
                               "()\n" +
                               "()\n" +
@@ -324,12 +324,12 @@ namespace YispTester
                           "(eq? 1.2345 1.2345)\n" +
                           "(eq? 'abc 'abc)\n" +
                           "(set a 5)(eq? a a)";
-            string expected = "t\n" +
+            string expected = "T\n" +
                               "()\n" +
                               "()\n" +
                               "()\n" +
-                              "t\n" +
-                              "t";
+                              "T\n" +
+                              "T";
 
             string output = Tools.RunCode(code);
 
@@ -346,11 +346,11 @@ namespace YispTester
                           "(and? (= 1 1) (= 1 1))\n" +
                           "(and? 1 ())\n" +
                           "(and? () ())";
-            string expected = "t\n" +
-                              "t\n" +
-                              "t\n" +
+            string expected = "T\n" +
+                              "T\n" +
+                              "T\n" +
                               "()\n" +
-                              "t\n" +
+                              "T\n" +
                               "()\n" +
                               "()";
 
@@ -368,11 +368,11 @@ namespace YispTester
                           "(or? (= 1 1) (= 1 2))\n" +
                           "(or? (= 1 1) (= 1 1))\n" +
                           "(or? () ())";
-            string expected = "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
-                              "t\n" +
+            string expected = "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
                               "()";
 
             string output = Tools.RunCode(code);
@@ -389,7 +389,7 @@ namespace YispTester
                           "(not? 1)\n" +
                           "(not? (list 1 2 3 4 5))";
             string expected = "()\n" +
-                              "t\n" +
+                              "T\n" +
                               "()\n" +
                               "()\n" +
                               "()";

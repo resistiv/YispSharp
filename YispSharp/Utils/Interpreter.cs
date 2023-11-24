@@ -87,7 +87,7 @@ namespace YispSharp.Utils
             }
             else if (obj is bool b)
             {
-                return b ? "t" : "()";
+                return b ? "T" : "()";
             }
             else if (obj is string s)
             {
