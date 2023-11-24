@@ -1,0 +1,71 @@
+; Gets the sum of the next two balls, as all paths need at least two ball values
+(define two-balls (balls)
+    (+ (car balls) (car (cdr balls)))
+)
+
+; Gets the sum of the next three balls, as required by some paths
+(define three-balls (balls)
+    (+ (two-balls balls) (car (cdr (cdr balls))))
+)
+
+; Tests if the current frame is a strike
+(define strike? (balls)
+    (= (car balls) 10)
+)
+
+; Tests if the current frame is a spare
+(define spare? (balls)
+    (= (two-balls balls) 10)
+)
+
+; Scores all frames recursively
+(define next-frame (balls frame) (cond
+    ; Frame 10 behaves differently, add only raw scores
+    (= frame 10) (cond
+        ; If a strike or spare occurs, we get an extra ball
+        (> (two-balls balls) 9) (three-balls balls)
+        ; Otherwise, we only get two balls
+        't (two-balls balls)
+    )
+    
+    ; Strike (X + # #)
+    (strike? balls)
+        (+
+            ; Strike scores by adding strike ball (10) and the next two balls
+            (three-balls balls)
+            (next-frame (cdr balls) (+ frame 1))
+        )
+    ; Spare (# / + #)
+    (spare? balls)
+        (+
+            ; Spare scores by adding spare (b1 + b2 = 10) and the next balls
+            (three-balls balls)
+            (next-frame (cdr (cdr balls)) (+ frame 1))
+        )
+    ; Open frame (# #)
+    't
+        (+
+            ; Open scores only its own balls
+            (two-balls balls)
+            (next-frame (cdr (cdr balls)) (+ frame 1))
+        )
+))
+
+; Entry point
+(define bowling (balls)
+    (next-frame balls 1)
+)
+
+; Collapsed version
+; (define bowling (balls) (next-frame balls 1))
+; (define two-balls (balls) (+ (car balls) (car (cdr balls))))
+; (define three-balls (balls) (+ (two-balls balls) (car (cdr (cdr balls)))))
+; (define strike? (balls) (= (car balls) 10))
+; (define spare? (balls) (= (two-balls balls) 10))
+; (define next-frame (balls frame) (cond (= frame 10) (cond (> (two-balls balls) 9) (three-balls balls) 't (two-balls balls)) (strike? balls) (+ (three-balls balls) (next-frame (cdr balls) (+ frame 1))) (spare? balls) (+ (three-balls balls) (next-frame (cdr (cdr balls)) (+ frame 1))) 't (+ (two-balls balls) (next-frame (cdr (cdr balls)) (+ frame 1)))))
+
+; Test cases
+(bowling (list 10 10 10 10 10 10 10 10 10 10 10 10))     ; 300
+(bowling (list 10 3 2 7 1 10 10 2 8 4 5 3 6 5 5 8 2 3))  ; 133
+(bowling (list 10 5 5 10 7 3 4 3 5 5 3 5 1 0 10 4 4))    ; 129
+(bowling (list 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0)) ; 0

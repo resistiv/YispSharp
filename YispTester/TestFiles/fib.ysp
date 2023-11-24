@@ -1,0 +1,16 @@
+; Simple recursive Fibonacci sequence calculator
+(define fib (n) (cond
+    (< n 1) ()
+    (= n 1) 0
+    (= n 2) 1
+    't (+ (fib (- n 1)) (fib (- n 2)))
+))
+
+; Collapsed version
+; (define fib (n) (cond (< n 1) () (= n 1) 0 (= n 2) 1 't (+ (fib (- n 1)) (fib (- n 2)))))
+
+(fib 1) ; 0
+(fib 2) ; 1
+(fib 5) ; 3
+(fib 12) ; 89
+(fib 24) ; 28657

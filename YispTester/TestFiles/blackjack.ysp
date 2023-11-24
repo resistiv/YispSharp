@@ -1,0 +1,32 @@
+; Main entry point
+(define blackjack (hand)
+    (count-cards hand 0 0)
+)
+
+; Card counter
+(define count-cards (hand aces score) (cond
+    ; End of hand
+    (nil? hand) (cond
+        ; Can we maximize one of the aces? If so, add 10.
+        (and? (> aces 0) (< score 12)) (+ 10 score)
+        't score
+    )
+    ; Face cards
+    (> (car hand) 10) (count-cards (cdr hand) aces (+ 10 score))
+    ; Numerals
+    (> (car hand) 1) (count-cards (cdr hand) aces (+ (car hand) score))
+    ; Ace, add 1
+    't (count-cards (cdr hand) (+ 1 aces) (+ 1 score))
+))
+
+; Collapsed version
+; (define blackjack (hand) (count-cards hand 0 0))
+; (define count-cards (hand aces score) (cond (nil? hand) (cond (and? (> aces 0) (< score 12)) (+ 10 score) 't score) (> (car hand) 10) (count-cards (cdr hand) aces (+ 10 score)) (> (car hand) 1) (count-cards (cdr hand) aces (+ (car hand) score)) 't (count-cards (cdr hand) (+ 1 aces) (+ 1 score))))
+
+; Test cases
+(blackjack (list 1 11))      ; 21
+(blackjack (list 1 1))       ; 12
+(blackjack (list 1 1 1 13))  ; 13
+(blackjack (list 7 8 1 1))   ; 17
+(blackjack (list 1 1 1 1 1)) ; 15 (Not possible without cheating)
+(blackjack (list 2 11 1 7))  ; 20
