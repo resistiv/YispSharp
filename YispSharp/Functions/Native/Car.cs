@@ -18,6 +18,10 @@ namespace YispSharp.Functions.Native
             {
                 return carList[0];
             }
+            else if (obj is SExpr.List sl && sl.Values.Count != 0)
+            {
+                return sl.Values[0];
+            }
             else
             {
                 throw new RuntimeException($"Operand must be a list.");
