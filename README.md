@@ -1,5 +1,8 @@
+
+[//]: # (Hey!! This document is best viewed on GitHub: https://github.com/resistiv/YispSharp)
+
 # YispSharp
-YispSharp is a C# implementation of a Lisp interpreter, created using [*Crafting Interpreters* by Robert Nystrom](https://craftinginterpreters.com/) as a guide. This project was developed primarily as an assignment for CS 403/503 - Programming Languages (Fall 2023) at the University of Alabama. The interpreter works on a dialect of Lisp created by our professor, Don Yessick, called Yessick's Lisp or Yisp for short.
+YispSharp is a C# implementation of a Lisp interpreter, created using [*Crafting Interpreters* by Robert Nystrom](https://craftinginterpreters.com/) as a guide. This project was developed primarily as an assignment for CS 403/503 - Programming Languages (Fall 2023) at the University of Alabama. The interpreter works on a dialect of Lisp established by our professor, Don Yessick, called Yessick's Lisp or Yisp for short.
 
 The instructions provided for this project can be found [here](/Instructions.md), and some notes on the grammar used to build this interpreter can be found [here](/Grammar.md).
 
