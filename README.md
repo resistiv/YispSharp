@@ -44,7 +44,7 @@ dotnet test
 The number of successful and failed tests will be displayed. Of important note, some tests will be noted as being skipped; these test sets were used early in development for things like Scanner and Parser testing, and are no longer applicable in the program's current state, thus they are NOT failed tests.
 
 As of commit ``4718a06``, everything builds, runs, and all tests pass on Windows 10.
-![](./YispSharp/YispTester/Results/win10-tests-2023-11-24.png "Windows 10 Test Results")
+![](./YispTester/Results/win10-tests-2023-11-24.png "Windows 10 Test Results")
 
 ### Tests Outline
 For each built-in function or operation, there is an individual test with cases testing a range of correct and incorrect usages. All of these tests are fairly simple and are made to test the basic functionality of these operations.
