@@ -474,5 +474,24 @@ namespace YispTester
 
             Assert.AreEqual(expected, output);
         }
+
+        [TestMethod]
+        public void EvalTest()
+        {
+            string code = "(set a 3) (eval 'a)\n" +
+                          "(eval '(+ 1 2 3))\n" +
+                          "(eval '(list 1 2 3))\n" +
+                          "(eval '1)\n" +
+                          "(eval 123)";
+            string expected = "3\n" +
+                              "6\n" +
+                              "(1 2 3)\n" +
+                              "1\n" +
+                              "123";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
     }
 }

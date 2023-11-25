@@ -36,6 +36,7 @@ namespace YispSharp.Utils
             { "set", new Set() },
             { "define", new Define() },
             { "quote", new Quote() },
+            { "eval", new Eval() },
         };
 
         public Interpreter()
