@@ -154,6 +154,10 @@ namespace YispSharp.Utils
             {
                 return false;
             }
+            else if (a is SExpr.Atom atomA && b is SExpr.Atom atomB)
+            {
+                return atomA.Value.Equals(atomB.Value);
+            }
             else
             {
                 return a.Equals(b);

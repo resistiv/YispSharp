@@ -114,7 +114,9 @@ namespace YispTester
                           "(= (list 1 2) 1)\n" +
                           "(= 3 (list 4 5))\n" +
                           "(= (list 1 2 3) (list 1 2 3))\n" +
-                          "(= () ())";
+                          "(= () ())\n" +
+                          "(= 'a 'a)\n" +
+                          "(= 'a 'b)";
             string expected = "T\n" +
                               "T\n" +
                               "T\n" +
@@ -124,7 +126,9 @@ namespace YispTester
                               "()\n" +
                               "()\n" +
                               "()\n" +
-                              "T";
+                              "T\n" +
+                              "T\n" +
+                              "()";
 
             string output = Tools.RunCode(code);
 

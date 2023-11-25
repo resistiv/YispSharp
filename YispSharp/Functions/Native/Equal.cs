@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles atomic equality.
+    /// </summary>
     public class Equal : ICallable
     {
         public Range Arity()
