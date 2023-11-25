@@ -13,7 +13,7 @@ namespace YispSharp.Functions.Native
         public object Call(Interpreter interpreter, List<SExpr> arguments)
         {
             object obj = interpreter.Evaluate(arguments[0]);
-            return obj == null ? true : null;
+            return obj == null || (obj is SExpr.List l && l.Values.Count == 0) ? true : null;
         }
     }
 }

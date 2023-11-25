@@ -27,7 +27,9 @@ namespace YispSharp.Functions.Native
             }
             else if (obj is SExpr.List sl && sl.Values.Count != 0)
             {
-                return new SExpr.List(sl.Values.Skip(1).ToList());
+                List<SExpr> newList = sl.Values.Skip(1).ToList();
+                return newList.Count == 0 ? null : new SExpr.List(newList);
+                // Self-evaluating nil
             }
             else
             {

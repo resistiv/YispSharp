@@ -11,11 +11,13 @@ namespace YispTester
             string code = "1\n" +
                           "50.75\n" +
                           "()\n" +
-                          "\"Hello\"";
+                          "\"Hello\"\n" +
+                          "'abc";
             string expected = "1\n" +
                               "50.75\n" +
                               "()\n" +
-                              "\"Hello\"";
+                              "\"Hello\"\n" +
+                              "abc";
 
             string output = Tools.RunCode(code);
 
@@ -218,7 +220,12 @@ namespace YispTester
                           "(car (cdr (cdr (cdr (list 1 2 3 4 5)))))\n" +
                           "(cdr (cdr (cdr (cdr (list 1 2 3 4 5)))))\n" +
                           "(car (cdr (cdr (cdr (cdr (list 1 2 3 4 5))))))\n" +
-                          "(cdr (cdr (cdr (cdr (cdr (list 1 2 3 4 5))))))";
+                          "(cdr (cdr (cdr (cdr (cdr (list 1 2 3 4 5))))))\n" +
+                          // Tests car/cdr on quoted lists
+                          "(car '(list a 2 3))\n" +
+                          "(car (cdr '(list a 2 3)))\n" +
+                          "(car (cdr '(list 1)))\n" +
+                          "(cdr (cdr '(list 1)))";
             string expected = "1\n" +
                               "(2 3 4 5)\n" +
                               "2\n" +
@@ -228,6 +235,10 @@ namespace YispTester
                               "4\n" +
                               "(5)\n" +
                               "5\n" +
+                              "()\n" +
+                              "list\n" +
+                              "a\n" +
+                              "1\n" +
                               "()";
 
             string output = Tools.RunCode(code);
@@ -244,14 +255,16 @@ namespace YispTester
                           "(number? 1.2345)\n" +
                           "(number? ())\n" +
                           "(number? (list 1 2 3 4 5))\n" +
-                          "(number? 'abc)";
+                          "(number? 'abc)\n" +
+                          "(number? (car '(1)))";
             string expected = "T\n" +
                               "T\n" +
                               "T\n" +
                               "T\n" +
                               "()\n" +
                               "()\n" +
-                              "()";
+                              "()\n" +
+                              "T";
 
             string output = Tools.RunCode(code);
 
@@ -284,12 +297,14 @@ namespace YispTester
                           "(list? 123)\n" +
                           "(list? (list 1 2 3 4 5))\n" +
                           "(list? 1.2345)\n" +
-                          "(list? 'abc)";
+                          "(list? 'abc)\n" +
+                          "(list? '(this is a list too))";
             string expected = "T\n" +
                               "()\n" +
                               "T\n" +
                               "()\n" +
-                              "()";
+                              "()\n" +
+                              "T";
 
             string output = Tools.RunCode(code);
 
@@ -303,12 +318,14 @@ namespace YispTester
                           "(nil? 123)\n" +
                           "(nil? (list 1 2 3 4 5))\n" +
                           "(nil? 1.2345)\n" +
-                          "(nil? 'abc)";
+                          "(nil? 'abc)\n" +
+                          "(nil? '())";
             string expected = "T\n" +
                               "()\n" +
                               "()\n" +
                               "()\n" +
-                              "()";
+                              "()\n" +
+                              "T";
 
             string output = Tools.RunCode(code);
 
@@ -319,12 +336,18 @@ namespace YispTester
         public void EqPTest()
         {
             string code = "(eq? () ())\n" +
+                          "(eq? '() ())\n" +
+                          "(eq? () '())\n" +
+                          "(eq? '() '())\n" +
                           "(eq? 123 123)\n" +
                           "(eq? (list 1 2 3 4 5) (list 1 2 3 4 5))\n" +
                           "(eq? 1.2345 1.2345)\n" +
                           "(eq? 'abc 'abc)\n" +
                           "(set a 5)(eq? a a)";
             string expected = "T\n" +
+                              "T\n" +
+                              "T\n" +
+                              "T\n" +
                               "()\n" +
                               "()\n" +
                               "()\n" +
@@ -425,6 +448,27 @@ namespace YispTester
                               "(1)\n" +
                               "(1 2 3 4 5)\n" +
                               "((1 2) 3 4 5)";
+
+            string output = Tools.RunCode(code);
+
+            Assert.AreEqual(expected, output);
+        }
+
+        [TestMethod]
+        public void SetTest()
+        {
+            string code = "(set a 3) a\n" +
+                          "(set a (+ 1 2 3 4)) a\n" +
+                          "(set b (list 1 2 3 4 5)) b\n" +
+                          "(set c 'abc) c\n" +
+                          "(set d (= 1 1)) d\n" +
+                          "(set e (= 1 2)) e";
+            string expected = "3\n" +
+                              "10\n" +
+                              "(1 2 3 4 5)\n" +
+                              "abc\n" +
+                              "T\n" +
+                              "()";
 
             string output = Tools.RunCode(code);
 
