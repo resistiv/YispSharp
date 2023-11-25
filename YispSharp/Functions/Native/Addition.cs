@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles numeric addition.
+    /// </summary>
     public class Addition : ICallable
     {
         public Range Arity()

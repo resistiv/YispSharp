@@ -3,7 +3,7 @@
 namespace YispSharp.Utils
 {
     /// <summary>
-    /// Provides utilities for scanning raw Yisp code.
+    /// Provides utilities for scanning raw Yisp code into <see cref="Token"/>s.
     /// </summary>
     public class Scanner
     {
@@ -38,6 +38,9 @@ namespace YispSharp.Utils
             return _tokens;
         }
 
+        /// <summary>
+        /// Scans an individual <see cref="Token"/> and adds it to the <see cref="Token"/> <see cref="List{T}"/>.
+        /// </summary>
         private void ScanToken()
         {
             char c = NextCharacter();

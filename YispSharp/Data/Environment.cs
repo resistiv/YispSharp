@@ -2,8 +2,14 @@
 
 namespace YispSharp.Data
 {
+    /// <summary>
+    /// Stores data for a scope.
+    /// </summary>
     public class Environment
     {
+        /// <summary>
+        /// The <see cref="Environment"/> that encloses this <see cref="Environment"/>.
+        /// </summary>
         public readonly Environment Enclosing;
         private readonly Dictionary<string, object> Values = new();
 

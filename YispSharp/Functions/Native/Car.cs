@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Fetches the first element of a list.
+    /// </summary>
     public class Car : ICallable
     {
         public Range Arity()
@@ -14,10 +17,12 @@ namespace YispSharp.Functions.Native
         public object Call(Interpreter interpreter, List<SExpr> arguments)
         {
             object obj = interpreter.Evaluate(arguments[0]);
+
             if (obj is List<object> carList)
             {
                 return carList[0];
             }
+            // Unevaluated s-expression
             else if (obj is SExpr.List sl && sl.Values.Count != 0)
             {
                 object o = sl.Values[0];

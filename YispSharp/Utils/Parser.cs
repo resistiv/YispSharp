@@ -3,11 +3,17 @@ using YispSharp.Exceptions;
 
 namespace YispSharp.Utils
 {
+    /// <summary>
+    /// Parses <see cref="Token"/>s into <see cref="SExpr"/>s.
+    /// </summary>
     public class Parser
     {
         private readonly List<Token> _tokens;
         private int _current = 0;
 
+        /// <summary>
+        /// Basic operations containing non-alphanumeric identifying symbols.
+        /// </summary>
         public static readonly TokenType[] Operations =
         {
             TokenType.Plus, TokenType.Minus,

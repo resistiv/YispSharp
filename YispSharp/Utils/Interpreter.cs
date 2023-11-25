@@ -6,12 +6,18 @@ using Environment = YispSharp.Data.Environment;
 
 namespace YispSharp.Utils
 {
+    /// <summary>
+    /// Handles runtime interpretation of code.
+    /// </summary>
     public class Interpreter : SExpr.IVisitor<object>
     {
         public readonly Environment Globals = new();
         public Environment Environment;
 
-        private static readonly Dictionary<string, ICallable> _nativeFunctions = new()
+        /// <summary>
+        /// Pre-defined functions.
+        /// </summary>
+        public static readonly Dictionary<string, ICallable> NativeFunctions = new()
         {
             { "+", new Addition() },
             { "-", new Subtraction() },
@@ -42,7 +48,7 @@ namespace YispSharp.Utils
         public Interpreter()
         {
             Environment = Globals;
-            foreach (KeyValuePair<string, ICallable> kvp in _nativeFunctions)
+            foreach (KeyValuePair<string, ICallable> kvp in NativeFunctions)
             {
                 Globals.Define(kvp.Key, kvp.Value);
             }
@@ -197,6 +203,7 @@ namespace YispSharp.Utils
 
         public object VisitAtomSExpr(SExpr.Atom expr)
         {
+            // Fetch symbols from environment
             if (expr.Value is Token t && (t.Type == TokenType.Symbol || Parser.Operations.Contains(t.Type)))
             {
                 return Environment.Get(t);

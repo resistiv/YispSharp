@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles a branching conditional structure.
+    /// </summary>
     public class Conditional : ICallable
     {
         public Range Arity()
@@ -13,7 +16,7 @@ namespace YispSharp.Functions.Native
 
         public object Call(Interpreter interpreter, List<SExpr> arguments)
         {
-            // Need cond-result pair
+            // Need cond-result pairs
             if (arguments.Count % 2 != 0)
             {
                 throw new RuntimeException("Expected an even number of arguments for a conditional structure.");

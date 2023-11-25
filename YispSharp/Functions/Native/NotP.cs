@@ -3,6 +3,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Negates the truthiness of an object.
+    /// </summary>
     public class NotP : ICallable
     {
         public Range Arity()

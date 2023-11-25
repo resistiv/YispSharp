@@ -3,6 +3,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles list creation
+    /// </summary>
     public class List : ICallable
     {
         public Range Arity()

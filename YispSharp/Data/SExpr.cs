@@ -1,5 +1,8 @@
 ﻿namespace YispSharp.Data
 {
+    /// <summary>
+    /// Represents a generic s-expression.
+    /// </summary>
     public abstract class SExpr
     {
         public abstract T Accept<T>(IVisitor<T> visitor);

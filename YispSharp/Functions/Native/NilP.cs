@@ -3,6 +3,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Checks if an object is nil.
+    /// </summary>
     public class NilP : ICallable
     {
         public Range Arity()

@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles numeric less than comparisons.
+    /// </summary>
     public class Lesser : ICallable
     {
         public Range Arity()

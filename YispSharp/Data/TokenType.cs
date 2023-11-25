@@ -1,13 +1,14 @@
 ﻿namespace YispSharp.Data
 {
+    /// <summary>
+    /// Stores all possible <see cref="Token"/> types.
+    /// </summary>
     public enum TokenType
     {
         // Delimiters
         LeftParentheses,
         RightParentheses,
         SingleQuote,
-        //DoubleQuote,
-        //Semicolon,
 
         // Operations
         Plus,
@@ -40,7 +41,6 @@
         String,
         Number,
         Nil,
-        True, // FIXME: This is here temporarily, until quote is properly implemented for 't
 
         Eof,
     }

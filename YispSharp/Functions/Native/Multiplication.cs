@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles numeric multiplication.
+    /// </summary>
     public class Multiplication : ICallable
     {
         public Range Arity()

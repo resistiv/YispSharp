@@ -3,6 +3,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Delays evaluation of an object.
+    /// </summary>
     public class Quote : ICallable
     {
         public Range Arity()

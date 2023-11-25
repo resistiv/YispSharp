@@ -3,6 +3,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Checks if an object is a symbol.
+    /// </summary>
     public class SymbolP : ICallable
     {
         public Range Arity()

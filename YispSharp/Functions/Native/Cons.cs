@@ -3,6 +3,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Creates a cons-cell (in practice, a list) between two objects.
+    /// </summary>
     public class Cons : ICallable
     {
         public Range Arity()
@@ -14,6 +17,7 @@ namespace YispSharp.Functions.Native
         {
             object left = interpreter.Evaluate(arguments[0]);
             object right = interpreter.Evaluate(arguments[1]);
+
             if (right is List<object> consList)
             {
                 return consList.Prepend(left).ToList();

@@ -3,6 +3,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles an "or" comparison of two arguments.
+    /// </summary>
     public class OrP : ICallable
     {
         public Range Arity()

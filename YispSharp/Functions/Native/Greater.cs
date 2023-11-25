@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles numeric greater than comparisons.
+    /// </summary>
     public class Greater : ICallable
     {
         public Range Arity()

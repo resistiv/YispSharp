@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles numeric subtraction.
+    /// </summary>
     public class Subtraction : ICallable
     {
         public Range Arity()

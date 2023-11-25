@@ -4,6 +4,9 @@ using Environment = YispSharp.Data.Environment;
 
 namespace YispSharp.Functions
 {
+    /// <summary>
+    /// Represents a user-defined function.
+    /// </summary>
     public class Function : ICallable
     {
         private readonly List<Token> Arguments;
@@ -22,12 +25,14 @@ namespace YispSharp.Functions
 
         public object Call(Interpreter interpreter, List<SExpr> arguments)
         {
+            // First, define arguments as local variables in a new environment
             Environment env = new(interpreter.Globals);
             for (int i = 0; i < Arguments.Count; i++)
             {
                 env.Define(Arguments[i].Lexeme, interpreter.Evaluate(arguments[i]));
             }
 
+            // Swap environments within interpreter and evaluate
             Environment prev = interpreter.Environment;
             object result = null;
             try

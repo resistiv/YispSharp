@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Fetches the tail of a list.
+    /// </summary>
     public class Cdr : ICallable
     {
         public Range Arity()
@@ -14,8 +17,10 @@ namespace YispSharp.Functions.Native
         public object Call(Interpreter interpreter, List<SExpr> arguments)
         {
             object obj = interpreter.Evaluate(arguments[0]);
+
             if (obj is List<object> cdrList)
             {
+                // If there are only two elements left, take the last element
                 if (cdrList.Count == 2)
                 {
                     return cdrList[1];
@@ -28,8 +33,8 @@ namespace YispSharp.Functions.Native
             else if (obj is SExpr.List sl && sl.Values.Count != 0)
             {
                 List<SExpr> newList = sl.Values.Skip(1).ToList();
-                return newList.Count == 0 ? null : new SExpr.List(newList);
                 // Self-evaluating nil
+                return newList.Count == 0 ? null : new SExpr.List(newList);
             }
             else
             {

@@ -4,6 +4,9 @@ using YispSharp.Utils;
 
 namespace YispSharp.Functions.Native
 {
+    /// <summary>
+    /// Handles numeric division.
+    /// </summary>
     public class Division : ICallable
     {
         public Range Arity()
@@ -15,6 +18,7 @@ namespace YispSharp.Functions.Native
         {
             double[] d = new double[2];
 
+            // Evaluate each argument
             for (int i = 0; i < 2; i++)
             {
                 object arg = interpreter.Evaluate(arguments[i]);
@@ -25,6 +29,7 @@ namespace YispSharp.Functions.Native
                 d[i] = (double)arg;
             }
 
+            // Special case
             if (d[1] == 0)
             {
                 throw new RuntimeException("Division by zero.");

@@ -3,7 +3,7 @@
 namespace YispSharp.Exceptions
 {
     /// <summary>
-    /// Represents an exception from a <see cref="Parser"/>.
+    /// Represents an <see cref="Exception"/> from a <see cref="Parser"/>.
     /// </summary>
     public class ParsingException : Exception { }
 }
