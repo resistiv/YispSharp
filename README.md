@@ -11,6 +11,7 @@ The instructions provided for this project can be found [here](/Instructions.md)
 2. [Building](#building)
 3. [Testing](#testing)
     1. [Tests Outline](#tests-outline)
+4. [Implementation Details](#implementation-details)
 
 ## Usage
 When run without an argument, Y# operates as a <abbr title="read-eval-print loop">REPL</abbr> prompt which runs until it encounters an exit code. Otherwise, when given a Yisp source file, Y# will attempt to execute it and then exit.
@@ -56,3 +57,14 @@ Three more complex tests are used to ensure everything is in proper working orde
 * **Blackjack**: Taken from the Blackjack assignment earlier in the semester, this tests comparisons, list manipulation, and recursion.
 * **Bowling**: Taken from the Bowling assignment earlier in the semester, this tests comparisons, function definitions & lazy evaluation, list manipulation, and recursion.
 * **Fibonacci**: A Fibonacci number calculator which tests comparisons and recursion.
+
+## Implementation Details
+Some changes were made to the base language for this implementation of Yisp in order to allow for more flexibility. If a change is not mentioned here, it can be assumed that the feature complies with the original project specification.
+
+* **Addition (+ val1 val2 ...)**: An addition operation accepts two or more values and adds all of them together.
+* **Subtraction (- val1 ...)**: A subtraction operation can perform two tasks:
+    - If given only one operand, the value is negated.
+    - If given two or more operands, all of the other operands are subtracted from the first operand.
+* **Multiplication (\* val1 val2 ...)**: A multiplication operation accepts two or more values and multiplies all of them together.
+* **Quote (quote val) or 'val**: In order to allow the ``symbol?`` function to work properly, ``quote`` was implemented. This had side effects for other functions such as ``car`` and ``cdr``, including the need for self-evaluation of numbers, strings, and nil; that is, a quoted version of any of the aforementioned types will be equal to a non-quoted version.
+* **Eval (eval val)**: To allow quoted values to be evaluated, ``eval`` was implemented.
