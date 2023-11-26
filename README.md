@@ -40,7 +40,7 @@ The resulting executables will be built to the ``bin`` subfolders of each projec
 ## Testing
 This project adapts several of [Robert Nystrom's Lox unit tests](https://github.com/munificent/craftinginterpreters/tree/master/test) to Yisp.
 
-Tests can be built and run using the following command:
+Tests can be built and run using the following command in the root of the repository:
 ```
 dotnet test
 ```
