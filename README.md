@@ -61,6 +61,7 @@ Three more complex tests are used to ensure everything is in proper working orde
 ## Implementation Details
 Some changes were made to the base language for this implementation of Yisp in order to allow for more flexibility. If a change is not mentioned here, it can be assumed that the feature complies with the original project specification. Additionally, lexical closures are not yet implemented due to time concerns.
 
+* **Lists (list ...)**: Lists need to be instantiated using the ``list`` function (except for nil, which can be used via ``()`` or ``(list)``). This was done to reduce ambiguity when interpreting function calls.
 * **Addition (+ val1 val2 ...)**: An addition operation accepts two or more values and adds all of them together.
 * **Subtraction (- val1 ...)**: A subtraction operation can perform two tasks:
     - If given only one operand, the value is negated.
