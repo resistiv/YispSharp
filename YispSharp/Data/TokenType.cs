@@ -19,28 +19,10 @@
         LessThan,
         GreaterThan,
 
-        // Functions
-        Define,
-        Set,
-        List,
-        Cons,
-        Cond,
-        Car,
-        Cdr,
-        AndP,
-        OrP,
-        NotP,
-        NumberP,
-        SymbolP,
-        ListP,
-        NilP,
-        EqP,
-
         // Literals/atoms
         Symbol,
         String,
         Number,
-        Nil,
 
         Eof,
     }
