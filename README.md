@@ -59,7 +59,7 @@ Three more complex tests are used to ensure everything is in proper working orde
 * **Fibonacci**: A Fibonacci number calculator which tests comparisons and recursion.
 
 ## Implementation Details
-Some changes were made to the base language for this implementation of Yisp in order to allow for more flexibility. If a change is not mentioned here, it can be assumed that the feature complies with the original project specification.
+Some changes were made to the base language for this implementation of Yisp in order to allow for more flexibility. If a change is not mentioned here, it can be assumed that the feature complies with the original project specification. Additionally, lexical closures are not yet implemented due to time concerns.
 
 * **Addition (+ val1 val2 ...)**: An addition operation accepts two or more values and adds all of them together.
 * **Subtraction (- val1 ...)**: A subtraction operation can perform two tasks:
